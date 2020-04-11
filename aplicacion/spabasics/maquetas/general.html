@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">  
+	<head>    
+		<title>{tituloPagina}. {sloganPagina}</title>    
+		<meta id='metaPagDescripcion' name="description" content="{descripcionPagina}">
+	  <meta name="keywords" content="{keywordsPagina}">
+	  <meta name="author" content="Alexis Leite - alexisleite@live.com">
+	  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+		<link rel="stylesheet" type="text/css" href="{baseUri}/estilosSistema.css" />
+		<script src="{baseUri}/../common/jquery.js"></script>
+		<script src="{baseUri}/scripts.js"></script>
+		<script src="{baseUri}/spa.js"></script>
+	</head>  
+	<body>
+		<div id="Loader"><div></div>Cargando</div>
+		<div id="ErrorDemoraMucho" class='warning'>Algo debe andar mal, se esta demorando mucho. <a href='{baseUri}' id='RecargarPagina' class='spa-active'>Recargar la pagina</a></div>
+		<script>$('#Loader').addClass('Abierto');</script>
+	</body>
+</html>

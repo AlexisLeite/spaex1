@@ -1,0 +1,16 @@
+<h3 class='Resultado' style='color:green'>{Resultado}</h3>
+<h3 class='Error' style='color:red'>{Error}</h3>
+<h2>Crear clase</h2>
+<form action='gestor' method='post'>
+	<input type='text' name='NombreClase' required autofocus />
+	<input type='submit' name='CrearClase' value='Crear clase' />
+</form>
+<h2>Crear modulo</h2>
+<form action='gestor' method='post'>
+	<input type='text' name='RutaModulo' required autofocus /><br>
+	<label><input type='checkbox' name='ModuloCrearModulo' checked>Modulo<br></label>
+	<label><input type='checkbox' name='ModuloCrearMaqueta' checked>Maqueta<br></label>
+	<label><input type='checkbox' name='ModuloCrearEstilos' checked>Estilos<br></label>
+	<label><input type='checkbox' name='ModuloCrearControlador' checked>Controlador<br></label>
+	<input type='submit' name='CrearModulo' value='Crear modulo' />
+</form>

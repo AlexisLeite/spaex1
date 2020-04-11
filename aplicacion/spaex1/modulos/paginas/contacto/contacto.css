@@ -1,0 +1,21 @@
+this
+{
+	margin: 40px;
+	padding: 60px;
+	background: #444;
+	border: 18px solid var(--main-background-buttons);
+}
+
+li
+{
+	list-style: none;
+	font-size: 18pt;
+	margin: 10px;
+}
+
+strong
+{
+	font-size: 20pt;
+	font-weight: bold;
+	text-decoration: underline;
+}

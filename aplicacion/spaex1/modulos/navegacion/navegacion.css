@@ -1,0 +1,17 @@
+ul
+{
+	background: var(--main-background-buttons);
+	text-align: center;
+}
+
+a,li
+{
+	display: inline-block;
+	padding: 15px 20px;
+	font: bold 17pt helvetica;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}

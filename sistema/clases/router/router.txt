@@ -1,0 +1,1 @@
+- Cuando quedan varias rutas que coinciden con la ruta actual y ya no se puede aplicar mas filtrado debido a que ninguna de las dos tiene mas niveles y son comparables en cuanto a niveles fijos con jerarquia, se aplicara la ruta que aparezca mas tarde dentro del fichero de rutas.

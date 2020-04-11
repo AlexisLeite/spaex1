@@ -1,0 +1,11 @@
+[
+	"gestorFramework:gestor",
+	"seccion:ALPHA",
+	"seccion:ALPHA/accion:ALPHA",
+	"seccion:personas/accion:ALPHA",
+	"seccion:personas/accion:ALPHA/persona:NUM",
+	"seccion:personas/accion:listado/nroPagina:NUM",
+	"seccion:personas/accion:listado/ordenar:ordenar/columna:ALPHA",
+	"seccion:personas/accion:listado/ordenar:ordenar/columna:ALPHA/ascDesc:ALPHA",
+	"seccion:personas/accion:listado/cancelarBusqueda:cancelarBusqueda"
+]

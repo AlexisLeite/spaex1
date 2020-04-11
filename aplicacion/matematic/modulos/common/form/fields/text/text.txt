@@ -1,0 +1,5 @@
+Muestra un campo de input de texto
+Admite los siguientes valores:
+'Titulo'
+'Nombre'
+'Valor'

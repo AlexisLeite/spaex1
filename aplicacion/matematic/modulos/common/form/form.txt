@@ -1,0 +1,21 @@
+El objeto common/form admite los siguientes parametros:
+
+- 'campos': Es un array de arrays asociativos con el siguiente formato:
+	[
+		'titulo'=>'Titulo a mostrar',
+		'nombre'=>'Nombre a mostrar',
+		'tipo'=> 'text | hidden | radio | checkbox',
+		
+		//Opcionales
+		'options' => Se utiliza para dar opciones a radio.
+		Es un array de arrays asociativos con el siguiente formato:
+			[
+				'titulo'=> 'Titulo a mostrar en esta opcion',
+				'valor' => 'Valor que toma el campo cuando esta opcion es seleccionada'
+			]
+	]
+
+
+'method' => get | post
+'action' => url hacia la que apunta el formulario
+'submit-value' => Texto que se mostrara en el boton de submit

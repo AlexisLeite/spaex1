@@ -1,0 +1,319 @@
+body
+{
+	box-sizing: border-box;
+	/* some vars to define colors */
+
+	/* usado en cuadros que requieran sobresaltar */
+	--contrast-background: #f0eddf;
+	--contrast-color: #333;
+
+	/* usado en botones que deban sobresaltar */
+	--highlight-background-buttons: #f4db50;
+	--highlight-color-buttons: #4f320e;
+
+	/* usado en los botones comunes */
+	--main-background-buttons: #d0b960;
+	--main-color-buttons: #3c2b03;
+
+	/* usado en botones secundarios */
+	--secondary-background-buttons: #2b1e14;
+	--secondary-color-buttons: #c6a173;
+
+	/* colores principales del body */
+	--body-background: #222;
+	--body-color: white;
+
+	/* colores de tablas */
+	--table-even-background: #000;
+	--table-odd-background: #333;
+
+	/* colores de warning */
+	--warning-color: black;
+	--warning-background: yellow;
+
+
+	/* estilos del body */
+	margin: 0;
+	font-family: Helvetica;
+	background: var(--body-background);
+	color: var(--body-color);
+}
+
+a, input[type='button'], input[type='submit']
+{
+	padding: 5px;
+	color: var(--main-color-buttons);
+	background: var(--main-background-buttons);
+	border: none;
+	border-radius: 5px;
+	text-align: center;
+	text-decoration: none;
+	font: 700 11pt verdana;
+}
+
+h1
+{
+	font-size: 62pt;
+	text-align: center;
+	padding: 0px 0;
+	color: ghostwhite;
+}
+
+input
+{
+	padding: 7px;
+	font: 12pt verdana;
+	width: 60vw;
+}
+
+input[type='submit'], input[type='button']
+{
+	width: auto;
+}
+
+label
+{
+	font: 14pt Helvetica ;
+}
+
+table
+{
+	min-width: 98%;
+	margin-left: 1%;
+	margin-top: 10px;
+	border-collapse: collapse;
+	border-left: 1px solid rgba(0,0,0,0.3);
+	border-top: 1px solid rgba(0,0,0,0.3);
+}
+
+tr
+{
+	height: 40px;
+}
+
+th, th a
+{
+	background: var(--secondary-background-buttons);
+	color: var(--secondary-color-buttons);
+	font: bold 14pt Arial;
+}
+
+th,td
+{
+	border-right: 1px solid rgba(0,0,0,0.3);
+	border-bottom: 1px solid rgba(0,0,0,0.3);
+	padding: 3px 7px;
+}
+
+tr:nth-child(even) 
+{
+	background: var(--table-even-background);
+}
+
+tr:nth-child(odd) 
+{
+	background: var(--table-odd-background);
+}
+
+/* Clases */
+.formTable
+{
+	margin: auto;
+	min-width: auto;
+	border-collapse: separate;
+	border-spacing: 5px 7px;
+	border: none;
+}
+
+.formTable tr
+{
+	background: none;
+}
+
+.formTable td
+{
+	padding: 3px;
+	height: 0;
+	width: 60vw;
+	border: none;
+}
+
+.formTable th
+{
+	border-radius: 4px;
+	background: var(--main-background-buttons);
+	color: var(--main-color-buttons);
+	text-align: right;
+	padding: 0 40px;
+}
+
+.highlighted
+{
+	background: white;
+	color: black;
+}
+
+.outstandBox
+{
+	background: var(--contrast-background);
+	color: var(--contrast-color);
+}
+
+.warning
+{
+	background: var(--warning-background);
+	color: var(--warning-color);
+	padding: 10px;
+	text-align: center;
+	font-weight: bold;
+}
+
+
+/* Identificadores */
+#Loader
+{
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: var(--contrast-background);
+	padding-top: 48vh;
+	text-align: center;
+	font: 16pt verdana;
+	animation: LoaderParpadear 5s linear 0s infinite normal forwards;
+	display: none;
+}
+#Loader.Abierto
+{
+	display: block;
+}
+#Loader.Minimal
+{
+	top: auto;
+	z-index: 20000;
+	bottom: 0;
+	padding: 0;
+	height: 10px;
+	font: 0pt verdana;
+	animation: none;
+}
+#Loader.Minimal > div
+{
+	background: var(--secondary-background-buttons);
+	height: 10px;
+	animation: LoaderMinimal 2s linear 0s infinite alternate forwards;
+}
+
+
+/* Animaciones */
+@keyframes LoaderMinimal
+{
+	0%
+	{
+		width: 0;
+	}
+	30%
+	{
+		width: 5vw;
+		margin-left: 0;
+	}
+	50%
+	{
+		width: 50vw;
+		margin-left:25vw;
+	}
+	70%
+	{
+		margin-left: 95vw;
+		width: 5vw;
+	}
+	100%
+	{
+		margin-left: 100vw;
+		width: 0;
+	}
+}
+
+@keyframes LoaderParpadear
+{
+	0%
+	{
+		background: #fafafa;
+	}
+	30%
+	{
+		background: #999;
+	}
+	35%
+	{
+		background: #8a8a90;
+	}
+	50%
+	{
+		background: #aaa;
+	}
+}
+
+
+
+
+/*
+ 
+ ZONA DE DEBUGS
+
+ */
+
+#Debugs h3.debug
+{
+	margin: 0;
+	margin-top: 3px;
+	padding: 3px 3px 3px 15px;
+	font: bold 12pt arial;
+	background: var(--secondary-background-buttons);
+	color: var(--secondary-color-buttons);
+	cursor: pointer;
+	display: none;
+}
+
+#Debugs.Abierto h3.debug
+{
+	display: block;
+}
+
+pre.debug
+{
+	background: var(--contrast-background);
+	color: var(--contrast-color);
+	font: 9pt arial;
+	margin: 0;
+	padding: 3px 0 3px 40px	;
+	display: none;
+}
+
+pre.debug.Abierto
+{
+	display: block;
+}
+
+#Debugs
+{
+	background: black;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	height: 30px;
+	width: 30px;
+	cursor: pointer;
+	z-index: 10000;
+	overflow: auto;
+}
+
+#Debugs.Abierto
+{
+	padding-top: 5px;
+	height: auto;
+	max-height: 95vh;
+	width: 100%;
+}

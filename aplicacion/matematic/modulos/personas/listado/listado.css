@@ -1,0 +1,65 @@
+this
+{
+	text-align:center;
+}
+
+.cancelarBusqueda
+{
+	margin: 20px 0 10px 0;
+}
+
+.cancelarBusqueda .outstandBox
+{
+	padding: 6px 0 6px 10px;
+	border-radius: 4px;
+}
+
+.cancelarBusqueda a
+{
+	font-weight: bold;
+	text-decoration: none;
+
+}
+
+form
+{
+	display: block;
+	margin: 20px;
+}
+
+#SelectorPagina input[type='text']
+{
+	display: inline;
+	width: 30px;
+}
+
+#SelectorPagina input[type='submit']
+{
+	display: inline;
+	width: 0;
+	padding: 0;
+	margin: 0;
+}
+
+#FormBusqueda
+{
+	display: block;
+	margin: 10px 0 30px 0;
+}
+
+#FormBusqueda input
+{
+	display: inline;
+	visibility: visible;
+	width: auto;
+	padding: 5px 10px;
+	margin: 0 10px 0 0;
+	font: 13pt verdana;
+	border-radius:  3px;
+}
+
+#FormBusqueda input[type='text']
+{
+	width: 60vw;
+	border: 1px solid rgba(0,0,0,0.2);
+}

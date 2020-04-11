@@ -1,0 +1,10 @@
+<form action='{action}' method='{method}'>
+	<table>
+	<tbody foreach='campos'>
+		<tr><th>{campos.titulo}:</th><td><nt modulo='common/form/field' options='campos/{index}'></nt></td></tr>
+	</tbody>
+	<tfoot>
+		<tr><td colspan='2'><input type='submit' value='{submitValue}' /></td></tr>
+	</tfoot>
+	</table>
+</form>

@@ -1,0 +1,22 @@
+<nt if='error'><h2 class='Error'>{error}</h2></nt>
+<nt if='success'><h2 class='Success'>{success}</h2></nt>
+<h2>Crear clase</h2>
+<form action='{baseUri}/gestor' method='post'>
+	<table class='formTable'>
+		<tr><th>Nombre:</th><td><input type='text' name='NombreClase' required autofocus /><br></td></tr>
+		<tr><td class='SubmitTd' colspan='2'><input type='submit' value='Crear clase' />
+		<input type='hidden' name='CrearClase' value='Si' /></td></tr>
+	</table>
+</form>
+<h2>Crear modulo</h2>
+<form action='{baseUri}/gestor' method='post' class='formTable'>
+	<table class='formTable'>
+		<tr><th>Nombre:</th><td><input type='text' name='RutaModulo' required autofocus /></td></tr>
+		<tr><td colspan='2'><label><input type='checkbox' name='ModuloCrearModulo' checked> Crear módulo.</label></td></tr>
+		<tr><td colspan='2'><label><input type='checkbox' name='ModuloCrearMaqueta' checked> Crear maqueta.</label></td></tr>
+		<tr><td colspan='2'><label><input type='checkbox' name='ModuloCrearEstilos' checked> Crear estilos.</label></td></tr>
+		<tr><td colspan='2'><label><input type='checkbox' name='ModuloCrearControlador' checked> Crear controlador (js).</label></td></tr>
+		<tr><td class='SubmitTd' colspan='2'><input type='submit' value='Crear modulo' />
+				<input type='hidden' name='CrearModulo' value='Si' /></td></tr>
+	</table>
+</form>

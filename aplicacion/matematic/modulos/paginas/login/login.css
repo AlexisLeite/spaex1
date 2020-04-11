@@ -1,0 +1,34 @@
+this
+{
+	text-align: center;
+}
+
+this > div
+{
+	margin: 20vh auto 0 auto;
+	border-radius: 3px;
+	border: 2px solid black;
+	max-width: 30vw;
+	min-height: 30vh;
+	padding: 0 20px;
+	text-align: left;
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+a
+{
+}
+
+h3
+{
+	margin: 5px auto 10px auto;
+	text-align: center;
+}
+
+.bienvenida
+{
+	text-align: center;
+	margin-top: 8vh;
+}

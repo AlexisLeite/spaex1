@@ -1,0 +1,19 @@
+<form id='FormBusqueda' action='{baseUri}/personas' method='post'>
+	<input type='text' name='Busqueda' placeholder='Ej: Raul Perez'required><input value='Buscar'  type='submit'>
+	<div if='busqueda' class='cancelarBusqueda'><span class='outstandBox'>Buscando '{busqueda}'. <a href='{baseUri}/personas/listado/cancelarBusqueda'>Cancelar busqueda</a></span></div>
+</form>
+
+<!-- Formulario de seleccion de pagina -->
+<form id='SelectorPagina' action='{baseUri}/personas' method='post'>
+	<a href='{baseUri}/personas/listado/{paginaAnterior}' class='Submit'>&lt;</a>
+	<input type='text' style='width:30px' value='{paginaActual}' name='getPage' required>
+	<a href='{baseUri}/personas/listado/{paginaSiguiente}' class='Submit'>&gt;</a> Mostrando pagina {paginaActual} de {paginasTotal}. Hay un total de {resultadosTotal} registros.
+	<input type='submit' style='visibility: hidden'>
+</form>
+
+<!-- Formulario de listado y eliminar seleccionados -->
+<form action='{baseUri}/personas/eliminar' method='post'>
+	<input type='submit' value='Eliminar seleccionados' name='Eliminar'>
+	<nt tablemaker='tablaPersonas'>
+	</nt>
+</form>

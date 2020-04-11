@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteRule ^.*estilosSistema.css$ estilos.php
+RewriteRule ^.*spa.js$ sistema/spa/spa.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^.*estilosSistema.css
+RewriteRule	^([^=]*)$	?ruta=$1	[L,QSA,NC]

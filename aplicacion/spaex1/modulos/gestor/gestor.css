@@ -1,0 +1,61 @@
+this
+{
+	margin: 30px;
+	border: 1px solid #ccc;
+	text-align: center;
+}
+
+h2
+{
+	margin: 20px 0 20px 0;
+	padding: 10px 20px;
+	background: var(--main-background-buttons);
+	color: var(--main-color-buttons);
+}
+
+h2:first-of-type
+{
+	margin: 0 0 20px 0;
+}
+
+h2 + form
+{
+	padding: 10px 30px;
+}
+
+.Error
+{
+	background: red;
+}
+
+.Success
+{
+	color:white;
+	background: green;
+}
+
+input[type='checkbox']
+{
+	width: 100px;
+}
+
+td[colspan='2']
+{
+	text-align: left !important;
+}
+
+tr:nth-child(odd) td[colspan='2']
+{
+	background: var(--table-odd-background)
+}
+
+tr:nth-child(even)  td[colspan='2']
+{
+	background: var(--table-even-background)
+}
+
+tr td.SubmitTd
+{
+	text-align: center !important;
+	background: none !important;
+}

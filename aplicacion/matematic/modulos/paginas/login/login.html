@@ -1,0 +1,20 @@
+<div if='usuario' class='outstandBox'>
+	<div class='bienvenida'>
+	<h2>Bienvenido {usuario}.</h2>
+	<a href='{baseUri}/logout'>Salir</a></div>
+	<else>
+		<h3>Login</h3>
+		<nt if='errorAutenticacion'>
+			<strong>{errorAutenticacion}</strong>
+		</nt>
+		<nt if='motivoRedireccion'>
+		<strong>{motivoRedireccion}<br></strong>
+		Pronto te redireccionaremos a '{direccionRedireccion}'.</nt>
+		<form method='post' action='{baseUri}/login'>
+		<input type='text' name='User'><br>
+		<input type='password' name='Pass'><br>
+		<input type='checkbox' name='Recordar' checked>Recuerdame<br>
+		<input type='hidden' name='IniciarSesion'><input type='submit' name='IniciarSesion' value='Iniciar sesion'>
+		</form>
+	</else>
+</div>

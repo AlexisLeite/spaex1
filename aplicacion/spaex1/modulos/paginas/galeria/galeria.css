@@ -1,0 +1,12 @@
+.MarcoFoto
+{
+	width: 30vw;
+	height: 20vw;
+	float: left;
+	margin-left: 2vw;
+}
+
+.MarcoFoto img
+{
+	width: 100%;
+}

@@ -1,0 +1,10 @@
+<form action='{action}' method='{method}'>
+	<table class='formTable'>
+	<tbody modulerepeater='fields'>
+		<tr class='{fields.type}' modulo='common/form/fields/{fields.type}' options='fields/{index}' />
+	</tbody>
+	<tfoot>
+		<tr class='submitRow'><td colspan='2'><input type='submit' value='{submitValue}' /></td></tr>
+	</tfoot>
+	</table>
+</form>

@@ -1,0 +1,17 @@
+this
+{
+	display: inline-block;
+	padding: 10px 0;
+}
+
+a
+{
+	border-top-right-radius: 0;
+	border-top-left-radius: 0;
+	padding: 10px 20px;
+	background: var(--highlight-background-buttons);
+	color: var(--highlight-color-buttons);
+	font-weight: bold;
+	text-decoration: none;
+	text-decoration: none;
+}

@@ -1,0 +1,16 @@
+this
+{
+	margin: 0;
+	text-align: center;
+}
+
+ul
+{
+	margin: 0;
+	padding: 0;
+}
+
+ul > li:first-of-type
+{
+	margin-left: 20px;
+}

@@ -1,0 +1,19 @@
+this
+{
+	text-align: center;
+}
+
+tr.mod-common-form-fields-hidden 
+{
+	display: none;
+}
+
+input[type='hidden']
+{
+	visibility: hidden;
+}
+
+[colspan='2']
+{
+	text-align: center;
+}

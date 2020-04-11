@@ -12,7 +12,7 @@ class Modulo
 
 	public function __construct($args)
 	{
-		$this->data = ['datos' => $args];
+		$this->data = $args;
 	}
 }
 

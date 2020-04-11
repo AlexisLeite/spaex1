@@ -10,7 +10,7 @@ class InterpreteIf
 
 		$valor = \Basic::getRoutedValue($data,$valor);
 
-		if($valor != 1 && ($valor==null || !$valor))
+		if($valor != 1 && ($valor===null || !$valor))
 		{
 			if(strlen($elseSentence))
 				$elemento->empty()->append($elseSentence);

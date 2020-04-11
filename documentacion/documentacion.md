@@ -9,21 +9,20 @@
 	1. [Configuración del framework, ultrasencilla!](#configuración-del-framework-ultrasencilla)
 	1. [Sintaxis básica](#sintaxis-básica)
 		1. [Declaración de una variable](#declaración-de-una-variable)
+			1. [Declaración de atributos dinámicos](#declaración-de-atributos-dinámicos)
 		1. [El array data](#el-array-data)
+		1. [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-información)
+		1. [Utilización de intérpretes](#utilización-de-intérpretes)
+			1. [El intérprete if](#el-intérprete-if)
+			1. [El intérprete forrepeater](#el-intérprete-forrepeater)
+			1. [El intérprete foreach](#el-intérprete-foreach)
+1. [Trabajando con módulos](#trabajando-con-módulos)
+	1. [¿Qué son los módulos?](#¿qué-son-los-módulos)
 	1. [Creación de módulos](#creación-de-módulos)
+	1. [Vinculación de módulos](#vinculación-de-módulos)
+	1. [Desarrollo de los módulos](#desarrollo-de-los-módulos)
 	1. [Ejemplo 1](#ejemplo-1)
 		1. [Construcción de un sitio sencillo con galería de fotos.](#construcción-de-un-sitio-sencillo-con-galería-de-fotos)
-			1. [estilos.css](#estiloscss)
-			1. [header.html](#headerhtml)
-			1. [main.html](#mainhtml)
-			1. [main.php](#mainphp)
-			1. [navegacion.html](#navegacionhtml)
-			1. [navegacion.php](#navegacionphp)
-			1. [contacto.html](#contactohtml)
-			1. [contacto.php](#contactophp)
-			1. [galeria.html](#galeriahtml)
-			1. [galeria.php](#galeriaphp)
-			1. [inicio.html](#iniciohtml)
 1. [Estructura del framework](#estructura-del-framework)
 	1. [Directorio raíz](#directorio-raíz)
 	1. [Directorio aplicación](#directorio-aplicación)
@@ -92,6 +91,16 @@ Con la variable $habilitarGestor se establece cuando la aplicación debe permiti
 $habilitarGestor = true;
 ```
 
+**Importante:** Para que la variable $habilitarGestor surta efecto, deben cumplirse dos condiciones:
+
+ - En el árbol de rutas, debe existir la siguiente ruta:
+ 
+```
+	"gestorFramework:gestor"
+```
+ 	
+ - En el directorio de módulos, debe existir el módulo gestor. Si se hubiera borrado accidentalmente, se puede descargar una copia [aquí](gestor.rar).
+
 [Volver arriba](#desarrollo-de-framework-spa)
 
 <a id="sintaxis-básica"></a>
@@ -113,42 +122,42 @@ Si desea conocer en profundidad esta estructura, puede dirigirse a [Estructura d
 Esta es la unidad más básica de las estructuras del framework, la inserción de variables. Cualquier cadena de texto encerrada entre llaves { y } será considerada una referencia a una variable. Para entender el funcionamiento, observemos la estructura de main.php:
 
 ```php
-	<?php
-	namespace main;
+<?php
+namespace main;
 
-	class Modulo
+class Modulo
+{
+	// No modificar
+	public $nombreModulo = 'Main';
+	public $rutaModulo = 'main';
+	public $args;
+
+	// Array de datos que utilizara el sistema para procesar la maqueta, debe ser escrito durante la construccion del modulo
+	public $data = 
+	[
+	];
+
+	public function __construct($args = [])
 	{
-		// No modificar
-		public $nombreModulo = 'Main';
-		public $rutaModulo = 'main';
-		public $args;
-
-		// Array de datos que utilizara el sistema para procesar la maqueta, debe ser escrito durante la construccion del modulo
-		public $data = 
+		$bienvenidas =
 		[
+			'Bienvenido usuario',
+			'Desarrolle rápido',
+			'Desarrolle bien'
 		];
 
-		public function __construct($args = [])
-		{
-			$bienvenidas =
-			[
-				'Bienvenido usuario',
-				'Desarrolle rápido',
-				'Desarrolle bien'
-			];
+		// Se declara el maximo indice al que se puede acceder en el array de bienvenidas
+		$maxIndice = sizeof($bienvenidas) - 1;
 
-			// Se declara el maximo indice al que se puede acceder en el array de bienvenidas
-			$maxIndice = sizeof($bienvenidas) - 1;
+		// Se escoge un indice al azar
+		$indiceBienvenida = floor(rand(0,$maxIndice));
 
-			// Se escoge un indice al azar
-			$indiceBienvenida = floor(rand(0,$maxIndice));
-
-			// Se escoge la bienvenida y se asigna al indice 'bienvenida' del array data del modulo
-			$this->data['bienvenida'] = $bienvenidas[$indiceBienvenida];
-		}
+		// Se escoge la bienvenida y se asigna al indice 'bienvenida' del array data del modulo
+		$this->data['bienvenida'] = $bienvenidas[$indiceBienvenida];
 	}
+}
 
-	?>
+?>
 ```
 
 Aquí hay varios conceptos involucrados, pero no nos detengamos en detalles del lenguaje por ahora. De todas formas, la estructura general del módulo será creada por el gestor de módulos. Para saber más, vea la sección [Creación de módulos](#creación-de-módulos). 
@@ -157,7 +166,35 @@ Lo que podemos decir por ahora es que la declaración del namespace, el nombre d
 
 En este pequeño ejemplo, vemos que se declara un array con 3 valores, los cuales corresponden a las diferentes bienvenidas que se darán al usuario. Luego se escoge uno al azar y se asigna al **array data**. Esto es todo lo que necesitamos para crear una pantalla de bienvenida que muestre un mensaje de bienvenida al azar, escogido desde un array de mensajes.
 
-Deberá notarse que el nombre del índice escogido en el array data es el mismo que el nombre de la variable declarada en la maqueta.
+Deberá notarse que el nombre del índice escogido en el array data es el mismo que el nombre de la variable declarada en la maqueta. De esta misma manera, podríamos también declarar atributos:
+
+<a id="declaración-de-atributos-dinámicos"></a>
+##### Declaración de atributos dinámicos
+
+Para declarar atributos dinámicos, utilizaremos la misma sintaxis que para [declarar una variable](#declaración-de-una-variable). Encerraremos el nombre de la variable que queremos que sea utilizada por el framework entre llaves { y }. La única diferencia será que lo haremos dentro de las comillas que establecen el valor del atributo que queremos declarar:
+
+```html
+<a href='{enlaceExclusivo}' id='#{identificadorEnlaceExclusivo}'>{textoEnlaceExclusivo}</a>
+```
+
+De esta forma, si tuviésemos un array $data como el siguiente:
+
+```php
+public $data =
+[
+	'enlaceExclusivo' => 'http://www.sitioSuperExclusifo.com',
+	'identificadorEnlaceExclusivo' => 'IdAccesibleDesdeJavascript',
+	'textoEnlaceExclusivo' => 'Ir a un sitio super exclusivo'
+]
+```
+
+Lograríamos un enlace válido, si luego notáramos que el valor estaba equivocado, ya que habíamos escrito 'http://www.sitioSuperExclusifo.com' en el enlace, podríamos cambiar esta propiedad desde el script php de la siguiente manera:
+
+```php
+$this->data['enlaceExclusivo'] = 'http://www.sitioSuperExclusivo.com';
+```
+
+Y el framework haría el trabajo de actualizar la información en la pantalla del cliente por nosotros.
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
@@ -176,34 +213,216 @@ Pero esto no es todo. El array data será asociativo y multidimensional, solamen
 Imaginemos que estamos desarrollando un módulo que muestra información de un auto, entonces una estructura de información típica podría verse como la siguiente:
 
 ```php
-	public $data =
+public $data =
+[
+	'autos' =>
 	[
-		'autos' =>
 		[
-			[
-				'marca' => 'Chevrolet',
-				'modelo' => 'Agile'
-			],
-			[
-				'marca' => 'Volkswagen',
-				'modelo' => 'Gol'
-			]
+			'marca' => 'Chevrolet',
+			'modelo' => 'Agile'
+		],
+		[
+			'marca' => 'Volkswagen',
+			'modelo' => 'Gol'
 		]
-	];
+	]
+];
 ```
 
 Entonces, esta información podría ser accedida desde la maqueta en cualquier momento. Por ejemplo, podríamos decir:
 
+<a id="sintaxis-de-acceso-a-la-información"></a>
+#### Sintaxis de acceso a la información
 ```html
-	<div><strong>{autos/0/marca}</strong> - {autos/0/modelo}</div>
-	<div><strong>{autos/1/marca}</strong> - {autos/1/modelo}</div>
+<div><strong>{autos/0/marca}</strong> - {autos/0/modelo}</div>
+<div><strong>{autos/1/marca}</strong> - {autos/1/modelo}</div>
 ```
 
 Este pequeño ejemplo funcionaría correctamente, identifiquemos pues qué elementos son los que lo hacen funcionar: Muy sencillo, la declaración de la variable está dividida en tres parte, separadas entre ellas por una barra. Cada barra indica cambio de directorio dentro del array. Es igual que acceder a una ruta de ficheros en linux. 
 
-Entonces, en el primer div, la primera variable es **{autos/0/marca}**. El framework accederá a la variable data del módulo, leerá primero el valor de autos. Luego leerá el índice 0, que corresonde al primer auto en este caso. Y por último leerá el índice marca, que en este caso es 'Chevrolet'.
+Entonces, en el primer div, la primera variable es **{autos/0/marca}**. El framework accederá a la variable data del módulo, leerá primero el valor de autos. Luego leerá el índice 0, que corresonde al primer auto en este caso. Y por último leerá el índice marca, que en este caso es 'Chevrolet'. Siguiendo este mismo razonamiento, podremos entender qué valores mostrarán las demás variables e imaginar que se mostrará un div para el primer auto y otro para el segundo. 
 
-Siguiendo este mismo razonamiento, podremos entender qué valores mostrarán las demás variables.	s
+Esta es la forma más sencilla de utilizar la información de los módulos, pero obviamente es muy limitada también. Es por eso que existen otras formas de hacerlo, que permitirán mejorar notablemente la funcionalidad de nuestras maquetas.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="utilización-de-intérpretes"></a>
+#### Utilización de intérpretes
+
+Los intérpretes son fracciones de código destinadas a extender la funcionalidad del framework. Cada uno de ellos cumplirá con una función distinta y podrán ser declarados dentro de la maqueta para utilizarlos. Existen algunos intérpretes sencillos y otros más complejos. 
+
+La estructura básica para usar cualquier intérprete dentro de una maqueta es la siguiente:
+
+```html
+<div nombreInterprete='nombreVariable'>Declaracion del intérprete</div>
+```
+
+Como se puede observar, existen al menos tres elementos involucrados. El *nombre del intérprete* será exresado como un atributo del elemento que lo contendrá. La información que utilizará, es decir, la variable que utilizará el intérprete será expresada como el valor de dicho atributo, especificando el *nombre de la variable*. De esta forma, cuando el framework procese esta declaración, le pasará la información al intérprete para que la desarrolle. El tercer elemento involucrado es la *declaración del intérprete*. Ésta será la guía que el intérprete utilizará para entender qué es lo que el usuario espera que haga con la información proporcionada.
+
+**Importante:**
+
+Si bien la sintaxis es similar a la de la declaración de atributos dinámicos, debemos notar que el nombre de la variable que queremos relacionar, **se escribe sin llaves**. Esto es muy importante ya que de otra forma se obtendrán resultados imprevistos.
+
+Para comenzar a entenderlos, explicaremos el uso del más sencillo de todos: **el intérprete if**.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="el-intérprete-if"></a>
+##### El intérprete if
+
+El intérprete if es una representación de la estructura if típica en cualquier lenguaje de programación. La gran diferencia es que éste no evalúa una expresión, como generalmente lo hacen los lenguajes, sino que solamente evalua una variable. Veámoslo con un ejemplo. Imaginemos que queremos mostrar un mensaje o no al usuario, dependiendo de si éste ha iniciado sesion. Para ello, estableceríamos la siguiente declaración en la maqueta:
+
+```html
+<h2 if='nombreUsuario'>Bienvenido {nombreUsuario}.
+	<else>Por favor, inicie sesión.</else></h2>
+```
+
+Cuando llenemos la información del módulo, deberíamos realizar una operación similar a la siguiente:
+
+```php
+public function __construct($args = [])
+{
+	// Se comprueba la existencia de nombre de usuario registrado en la sesion
+	if(isset($_SESSION['nombreUsuario']))
+
+		// Si existe, se asigna al indice nombreUsuario del array data/
+		$this->data['nombreUsuario'] = $_SESSION['nombreUsuario'];
+}
+```
+
+Con este código, obtendríamos un mensaje que se muestra al cliente dentro de un h2, saludando al usuario o invitando a que inicie sesión.
+
+Otro aspecto importante de esta declaración, es la introducción de la sentencia **else**. Ésta especifica qué debe mostrarse en caso de que se evalúe como false la variable que se especificó en la declaración del intérprete, en este caso, una invitación a iniciar sesión.
+
+La variable indicada en la especificación del intérprete, será falsa si se cumple alguna de las siguientes condiciones:
+
+ - La variable no existe.
+ - La variable fue establecida en *false*.
+ - La variable tiene valor 0.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="el-intérprete-forrepeater"></a>
+##### El intérprete forrepeater
+
+Otro aspecto muy importante de los intérpretes, es la capacidad de generar estructuras repetitivas. El intérprete **forrepeater** recorrerá la variable especificada en el llamado al intérprete y generará una estructura de repeticiones basándose en la declaración del mismo. 
+
+Este repetidor nos vendría muy bien para por ejemplo, escribir una lista de datos sencillos. Por ejemplo, los resultados de un sorteo:
+
+```html
+<h1>Resultados del sorteo:</h1>
+<div forrepeater='resultados'>{index} - <strong>{resultados}</strong><br /></div>
+```
+
+```php
+public function __construct($args = [])
+{
+	// Establecemos la cantidad máxima de resultados que queremos obtener
+	$cantidadResultados = 25;
+
+	// Creamos un array vacio para contener los resultados
+	$resultados = [];
+
+	// Generamos un bucle para lograr los resultados deseados
+	for($i = 0; $i<$cantidadResultados; $i++)
+	{
+		do
+		{
+			// Creamos un nuevo valor
+			$nuevoResultado = rand(1,100);
+		} 
+		// Si el valor ya esta en la lista de resultados, lo generamos nuevamente
+		while(!in_array($nuevoResultado, $resultados));
+
+		// Agregamos el nuevo resultado a la lista
+		$resultados[] = $nuevoResultado;
+	}
+
+	// Establecemos el array de resultados en el array data para que pueda ser accedido por el framework
+	$this->data['resultados'] = $resultados;
+}
+```
+
+Debemos notar que el esquema de trabajo se mantiene: generamos los datos en el módulo, el framework los muestra en la maqueta por nosotros. De esta forma, siempre tenemos una maqueta limpia, libre de programación y al contrario, nuestro código siempre está limpio de html.
+
+El intérprete forrepeater lo que hace en esta situación, es tomar cada valor del array que le hayamos pasado como parámetro. Luego toma la declaración establecida y reemplaza las cadenas **{index}** por el índice actual del bucle y la cadena **{nombreVariable}** por el valor actual en el bucle. En este caso, el nombre de la variable es resultados, por ese motivo podemos encontrar la cadena **{resultados}** en el cuerpo de la declaración.
+
+En el ejemplo anterior, creamos un array con 25 valores aleatorios y los asignamos al índice resultados del **array data**. Por otro lado en la maqueta, incrustamos un intérprete de tipo forrepeater y le pasamos como parámetro justamente la variable resultados. Además establecimos una estructura para que la repita por cada valor, mostrando el índice y el valor de la misma.
+
+Con este proceso logramos una página que muestra los resultados, separados por un <br />, que fue el que colocamos al final de la declaración del intérprete. Cada resultado vendrá acompañado por la posición que ocupan dentro del sorteo.
+
+Si bien con esto logramos añadir un poco más de funcionalidad a nuestra maqueta, ésta todavía se encuentra limitada. Porque, ¿qué pasaría con un ejemplo como el de los autos? Para eso existe el siguiente intérprete.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="el-intérprete-foreach"></a>
+##### El intérprete foreach
+
+El intérprete foreach es el segundo de los repetidores. Su función es generar una estructura repetitiva, permitiendo el acceso a las diferentes propiedades de los objetos que queremos repetir. Retomemos el ejemplo de los autos para entenderlo:
+
+```php
+public $data =
+[
+	'autos' =>
+	[
+		[
+			'marca' => 'Chevrolet',
+			'modelo' => 'Agile'
+		],
+		[
+			'marca' => 'Volkswagen',
+			'modelo' => 'Gol'
+		]
+	]
+];
+```
+
+Con esta estructura, obviamente estamos buscando mostrar al usuario la marca y el modelo de una lista de autos que tenemos en el array de data. Para ello, usaremos la siguiente declaracion:
+
+```html
+<ul foreach='autos'>
+	<li><strong>{autos.marca}</strong> {autos.modelo}</li>
+</ul>
+```
+Con solo esta sentencia, nosotros nos aseguramos de que el framework listará todos los autos que se encuentren en la lista. No importa cuántos sean. Ahora, sobre la declaración, podemos observar que hay una leve diferencia en la sintaxis con respecto a la [sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-información) que habíamos mencionado previamente.
+
+Esto es así porque el intérprete foreach define una sintaxis propia. Esta es: {nombreVariable.nombrePropiedad}, siendo nombreVariable el nombre de la variable que se pasó como parámetro al intérprete. Si nos fijamos, la variable pasada fue **autos** y las propiedades fueron **marca** y **modelo**. Esto se corresponde con el array de datos establecido.
+
+Existen dos intérpretes más establecidos por defecto, pero no los trabajaremos por el momento debido a su complejidad mayor. Primero, debemos ver de qué manera podemos incrustar módulos dentro de la maqueta.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="trabajando-con-módulos"></a>
+## Trabajando con módulos
+
+<a id="¿qué-son-los-módulos"></a>
+### ¿Qué son los módulos?
+
+Los módulos son la unidad más básica de producción de información del framework. Toda la aplicación desarrollada se sustentará en estas unidades y siendo bien entendidas, permitirán la organización de la estructura de la misma de forma ordenada y accesible. El objetivo de esta división será siempre la facilidad del desarrollo, mantenimiento y evolución de la aplicación creada.
+
+Cada módulo tendrá su propio directorio dentro del directorio de módulos, que por defecto es **/aplicacion/modulos**. El módulo principal de la aplicación es por defecto el módulo **main**. A través de él se accederá a todo el resto de la estructura, será el punto de partida. 
+
+A medida que desarrollemos nuestra aplicación, iremos creando distintos módulos que se enlazarán entre sí de forma selectiva, permitiendo generar una estructura dinámica basada en el entorno sin ningún tipo de restricción.
+
+La estructura funcional del módulo estará dividida en cuatro partes, expresadas a través de ficheros contenidos por el directorio del módulo: 
+
+ - **La unidad de maquetación (.html):** Es un fichero html con el nombre del módulo, en él se expresa la sintaxis html enriquecida que el framework interpretará y desarrollará para crear la aplicacion, basándose en la información que nosotros le proveamos.
+ - **La unidad de edición (.php):** Es un fichero php con el nombre del módulo, en él se expresa un script encargado de generar la información necesaria para que el módulo trabaje correctamente. Su estructura se basa en la declaración de una clase llamada Modulo, que deberá trabajar dentro de un namespace igual a la ruta de acceso al módulo. Además contendrá un [array público llamado $data](#el-array-data) que permitirá informar al framework sobre todas las características que deseemos hacer públicas del módulo y que probablemente queramos que el framework interprete y desarrolle en nuestra maqueta. 
+ 
+ 	Tendrá además, un método **__constructor** público que respetará la siguiente declaración:
+
+```php
+
+	public function __constructor($arts = []) {} : void
+
+```
+
+ - **La unidad de estilos (.css):** Es un fichero css con el nombre del módulo, en él se expresa la declaración de los estilos del módulo. Existe una sintaxis específica para los estilos que puede ser consultada en la sección estilos de los módulos.
+ - **La unidad de controlador (.js):** Es un fichero js con el nombre del módulo, en él se expresa la declaración del script del controlador, escrito en javascript. **No está implementado todavía.** Su función en el futuro será la de proveer funcionalidad específica del módulo al lado del cliente, relacionada con su información y con su estructura.
+
+Si bien a primera vista puede parecer que la estructura es demasiado compleja, esto no debe preocuparnos en la medida que será generada automáticamente por el gestor de módulos integrado en el framework.
+
+[Volver arriba](#desarrollo-de-framework-spa)
 
 <a id="creación-de-módulos"></a>
 ### Creación de módulos
@@ -217,7 +436,123 @@ Si la configuración está bien realizada, se debería poder tipear en el navega
 
 ![Pantalla del gestor](pantalla-gestor.png)
 
-La creación de módulos en el presente framework, se hará a través de la especificación de la ruta del módulo. Para ello, se debe ingresar en el campo nombre de módulo la ruta del módulo que desee crear. Esta ruta es la misma que será accedida para incrustar el módulo en otra maqueta. 
+La creación de módulos en el presente framework, se hará a través de la especificación de la ruta del módulo. Para ello, se debe ingresar en el campo nombre de módulo la ruta del módulo que desee crear. Esta ruta es la misma que será accedida para incrustar el módulo en otra maqueta y deberá respetar la [sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-información).
+
+Para entender el por qué de esta sintaxis, debemos entender que los módulos serán hijos de otros módulos en la ejecución, a través de las declaraciones realizadas en las diferentes maquetas. Pero también serán hijos de otros modulos en la declaración, a través de la creación de módulos dentro del directorio de otros módulos. Esto es así para facilitar la organización de la información.
+
+Por ejemplo, nosotros podríamos tener un directorio dentro de la raíz de módulos llamado usuarios, y dentro de él tener declarados dos módulos llamados **informacion** y **modificar**. Cada uno de ellos cumplirá una función distinta, pero los dos estarán agrupados dentro de usuarios, permitiendo identificar sobre qué área de la aplicación trabajan.
+
+Para crear estos módulos, deberíamos escribir en el campo de nombre de módulo:
+
+	usuarios/informacion
+	usuarios/modificar
+
+Cada línea del anterior bloque es una entrada distinta en el campo, o sea, debemos escribirlas por separado y presionar enter. Una vez creados ambos módulos, podremos acceder a ellos desde el directorio de módulos, dentro del directorio usuarios. Allí encontraremos a su vez, dos directorios: informacion y modificar.
+
+Esta declaracion, además de generar los directorios y las estructuras correspondientes para el módulo, define la que se pasará a llamar **Clase del módulo**. Esto es así y permite que distintos módulos compartan el nombre. Por ejemplo, uno podría tener dos módulos distintos, con clase usuarios/informacion y autos/informacion. El nombre de ambos módulos sería información pero la clase no. Y esto es lo que permite instanciarlos.
+
+Esta estructura se podrá extender tanto como el desarrollador desee, por ejemplo, podemos generar dos módulos distintos para mostra la información del usuario: la información de los usuarios estándar y la información de los administradores. En ese caso, en vez de las dos líneas anteriore, hubiésemos utilizado estas tres:
+
+	usuarios/informacion/estandar
+	usuarios/informacion/administrador
+	usuarios/modificar
+
+Esto hubiera generado la misma estructura de informacion que el bloque anterior, con la diferencia que dentro del directorio usuarios/informacion hubiese generado dos directorios: estandar y administrador. Así podríamos hacer lo mismo para el módulo usuarios/modificar, o para el módulo usuarios/informacion/estandar, creando submódulos a partir de ellos. Esto es, la estructura de módulos estará limitada solamente por la imaginación del usuario.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="vinculación-de-módulos"></a>
+### Vinculación de módulos
+
+La creación de módulos no tendría ningún sentido si no pudiesen ser vinculados. La vinculación entre ellos es la forma en la que la estructura toma sentido y también la forma en que se logra generar estructuras dinámicas en cualquier dimension.
+
+Para vincular un módulo a otro, basta con declararlo de la siguiente manera:
+
+```html
+<div modulo='claseModulo' />
+```
+
+De esta forma, el framework cargará el módulo especificado, interpretará su información, a partir de la cual desarrollará su maqueta y lo insertará dentro del elemento que contiene el atributo modulo. La sintaxis para declarar el nombre de un módulo, al igual que en la creación del mismo, respeta la [sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-información). De esta forma uno podría, siguiendo el ejemplo anterior, instanciar el módulo para mostrar la información de un usuario estándar de la siguiente manera:
+
+```html
+<div modulo='usuarios/informacion/estandar' />
+```
+
+El framework tomaría esta declaración y cargaría un módulo de clase usuarios/informacion/estandar, lo desarrollaría y lo insertaría dentro del div. Pero esto no tendría mucho sentido si no se pudiese pasar información al modulo. Es decir, ¿habría que crear variables globales? **ABSOLUTAMENTE NO**.
+
+Cuando se instancia un modulo, el framework tomará todos los atributos adicionales como parámetros para el mismo. Estos parámetros deberán hacer referencia a índices del [array data](#el-array-data). Ya fuese a índices que se encontraran en su raíz, o a índices que se encontraran más adentro. Incluso estos índices podrían ser creados a partir de un repetidor.
+
+Imaginemos que queremos crear un menú de navegación, crearemos un módulo de clase *navegacion* y un módulo de clase *navegacion/boton*. Estableceremos el array data del módulo navegación de la siguiente manera:
+
+```php
+public $data =
+[
+	'opciones' =>
+	[
+		['href' => '{baseUri}/Inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
+		['href' => '{baseUri}/About', 'title' => 'Saber más sobre nosotros.', 'text' => 'Nosotros'],
+		['href' => '{baseUri}/Contacto', 'title' => 'Opciones de contacto', 'text' => 'Contacto'],
+	]
+];
+```
+
+Luego la maqueta del módulo **navegacion**:
+
+```html
+<ul forrepeater='opciones'>
+	<li modulo='navegacion/boton' options='opciones/{index}' />
+</ul>
+```
+
+Esto puede parecer confuso, pero se puede aclarar fácilmente tomando en cuenta el método de [desarrollo de los módulos](desarrollo-de-los-módulos). Como adelanto, el repetidor se ejecuta primero, desarrolla una sentencia de tipo li por cada índice del array opciones y la escribe en la maqueta. Para cuando el repetidor termina de trabajar, el módulo contiene la siguiente estructura:
+
+```html
+<ul>
+	<li modulo='navegacion/boton' options='opciones/0' />
+	<li modulo='navegacion/boton' options='opciones/1' />
+	<li modulo='navegacion/boton' options='opciones/2' />
+</ul>
+```
+
+Esto le indicaría al framework que tiene que instanciar tres módulos de la clase navegacion/boton y pasarle a cada uno de ellos el array contenido dentro de cada índice del array opciones. Si tuviésemos declarado el módulo navegacion/boton de la siguiente manera:
+
+```php
+public function __contruct($args)
+{
+	$this->data = $args['options'];
+}
+```
+
+En el constructor, el parámetro $args recibido por el módulo declarado con el índice 0 será:
+
+```php
+$args = 
+[
+	'href' => '{baseUri}/Inicio', 
+	'title' => 'Ir al inicio', 
+	'text' => 'Inicio'
+]
+```
+Como lo habíamos asignado al array data, podríamos acceder a estos datos desde la maqueta, de la siguiente manera:
+
+```html
+<a href='{href}' title='{title}'>{text}</a>
+```
+
+Lograríamos un menú de navegación basado en listas completamente funcional. Si además consideramos la posibilidad de aplicar estilos por separado a cada módulo, veríamos qué fácil sería dejarlo super presentable.
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
+<a id="desarrollo-de-los-módulos"></a>
+### Desarrollo de los módulos
+
+El desarrollo de los módulos sigue un orden específico que permite definir reglas claras a la hora de escribir una maqueta compleja:
+
+1. **Se desarrolla la maqueta:** El proceso de desarrollo de la maqueta consiste en ubicar todos los intérpretes declarados y procesarlos. De esta forma, los repetidores desarrollan las sentencias correspondientes, el if decide qué datos van a estar presentes y cuáles no.
+2. **Se interpretan las variables:** Luego se buscan todas las variables dentro de la maqueta y se reemplazan por sus valores correspondientes. Es importante notar que solamente se podrán escribir en la maqueta variables que puedan ser transformadas a string. Si se declara una variable cuyo valor no puede ser transformado a string, resultará en un error.
+3. **Se incrustan los módulos:** Una vez que todas las variables fueron interpretadas, se llama a los módulos correspondientes, los que hayan quedado declarados en la maqueta.
+
+![Diagrama de desarrollo de los módulos](diag-desarrollo-modulos.png)
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
@@ -232,9 +567,13 @@ La estructura ya terminada del documento, puede ser accedida haciendo clic [Aqu�
 
 Una vez que tengamos instalado y [configurado](#configuración-del-framework-ultrasencilla) nuestro framework, podríamos simplemente descomprimir el [fichero rar](ejemplo1.rar) del ejemplo dentro del directorio de módulos o crear los archivos con el contenido especificado a continuación.
 
-Para una estructura de este tipo, el desarrollador solamente tendría que generar un árbol de información similar al siguiente:
+Para una estructura de este tipo, el desarrollador tendría que generar un árbol de información similar al siguiente:
 
 ![Árbol de ficheros del ejemplo 1](arbol-ejemplo-1.png)
+
+Una vez desarrollado el contenido de los distintos ficheros, deberíamos obtener un sitio similar al siguiente:
+
+![Diagrama de desarrollo de los módulos](captura-galeria-fotos.png)
 
 El contenido de cada fichero es detallado a continuación, si bien puede parecer compleja la estructura sobre todo de los ficheros php, créeme que no lo es. Sobre todo considerando que el framework incorpora su propio [creador de módulos](#creación-de-módulos).
 
@@ -382,8 +721,11 @@ class Modulo
 ###### galeria.html
 
 ```html
+<div id='VistaPrevia' if='imagenGrande'>
+	<a href='{imagenGrande}' title='Abrir imagen' target='_blank'><img src='{imagenGrande}' />
+</div>
 <div forrepeater='fotos'>
-	<div class='MarcoFoto'><a href='{fotos}' title='Abrir imagen' target='_blank'><img src='{fotos}' /></a></div>
+	<div class='MarcoFoto'><a href='{baseUri}/galeria/{index}' title='Abrir imagen'><img src='{fotos}' /></a></div>
 </div>
 ```
 
@@ -412,6 +754,9 @@ class Modulo
 		{
 			return !in_array($el, ['..','.']);
 		})));
+
+		if(\Router::get('imagen') !== null)
+			$this->data['imagenGrande'] = $this->data['fotos'][\Router::get('imagen')];
 	}
 }
 
@@ -508,4 +853,5 @@ El router es el encargado de desglosar las rutas recibidas y disponer de dicha i
 Se implementará a través de una clase estática que deberá ser inicializada mediante el método **Router::run()** al comenzar la ejecución del sistema. Su primera tarea será la de dividir la ruta en directorios y almacenarla en la propiedad pública **Router::$arrayRuta**. Luego procederá a leer la hoja de rutas, ubicada dentro del fichero rutas.json que se encuentra dentro del directorio del router.
 
 [Volver arriba](#desarrollo-de-framework-spa)
-[]: 
+[]: Diagrama de desarrollo de los módulos
+(diag-desarrollo-modulos.png): 

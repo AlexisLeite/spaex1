@@ -3,9 +3,9 @@
 	{
 		"clases": "{rutaApp}/sistema/clases",
 		"common": "{rutaApp}/../common",
-		"modulos": "{rutaApp}/aplicacion/spabasics/modulos",
+		"maquetas": "{rutaApp}/aplicacion/spaex1/maquetas",
+		"modulos": "{rutaApp}/aplicacion/spaex1/modulos",
 		"moduloGestor": "/../../../sistema/gestor",
-		"maquetas": "{rutaApp}/aplicacion/spabasics/maquetas",
 		"phpquery": "{ruta/common}/phpquery.php",
 		"servicios": "{rutaApp}/aplicacion/servicios",
 		"sistema": "{rutaApp}/sistema"

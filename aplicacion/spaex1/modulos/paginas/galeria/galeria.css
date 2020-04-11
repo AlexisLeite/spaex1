@@ -1,12 +1,34 @@
 .MarcoFoto
 {
+	box-sizing: border-box;
 	width: 30vw;
-	height: 20vw;
 	float: left;
 	margin-left: 2vw;
+	border: 15px solid white;
+	padding: 0;
+}
+
+.MarcoFoto a
+{
+	margin: 0;
+	padding: 0;
 }
 
 .MarcoFoto img
 {
 	width: 100%;
+	margin: 0;
+}
+
+#VistaPrevia img
+{
+	box-sizing: border-box;
+	border: 45px solid white;
+	width: 50vw;
+	margin: 10px 0 10px 25vw;
+}
+
+a
+{
+	background: none !important;
 }

@@ -19,6 +19,9 @@ class Modulo
 		{
 			return !in_array($el, ['..','.']);
 		})));
+
+		if(\Router::get('imagen') !== null)
+			$this->data['imagenGrande'] = $this->data['fotos'][\Router::get('imagen')];
 	}
 }
 

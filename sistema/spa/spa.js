@@ -23,8 +23,7 @@ $(document).ready(()=>
 	{
 		var modulos = [];
 		var moduloRaiz = null;
-		var regexLocalDomain = new RegExp('^(?:https?:\\/\\/)?' + Conf.baseUri + 
-			'.*/');
+		var regexLocalDomain = new RegExp('^(?:https?:\\/\\/)?{uri/base}.*/');
 
 		function procesarLocationChange(ev,href,method='get',data={})
 		{
@@ -72,7 +71,7 @@ $(document).ready(()=>
 				// Definir el action
 				let action = el.attr('action');
 				action = action ? action : window.location;
-				if(!regexLocalDomain.test(action)) action = `${Conf.baseUri}/${action}`;
+				if(!regexLocalDomain.test(action)) action = `{uri/base}/${action}`;
 
 				// Establecer el evento
 				el.submit(function(ev)
@@ -118,7 +117,7 @@ $(document).ready(()=>
 			cargando = false;
 		}
 
-		$.get('{baseUri}/?activarSpa',this.procesarRespuesta);
+		$.get('{uri/base}/?activarSpa',this.procesarRespuesta);
 
 		// Se refiere al codigo fuente de los modulos, la maqueta y el controlador. No a los modulos de la clase Modulo
 		this.getModulo = function(clase)

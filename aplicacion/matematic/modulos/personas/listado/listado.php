@@ -129,7 +129,7 @@ class Modulo
 			array_splice($this->data['tablaPersonas'][0]['rows'][0]['nodes'], 1, 0,
 				[[
 					'mode' => 'href',
-					'href' => "{baseUri}/personas/listado/ordenar/$col/$ascDescCol",
+					'href' => "{uri/base}/personas/listado/ordenar/$col/$ascDescCol",
 					'title' => "Ordenar resultados por $col",
 					'th' => true, 
 					'text' => ucfirst($col)
@@ -198,13 +198,13 @@ class Modulo
 				'-',
 				[
 					'mode' => 'href',
-					'href' => "{baseUri}/personas/modificar/{$persona['ci']}",
+					'href' => "{uri/base}/personas/modificar/{$persona['ci']}",
 					'text' => 'Modificar',
 					'title' => "Modificar {$persona['nombre']} {$persona['apellido']}."
 				],
 				[
 					'mode' => 'href',
-					'href' => "{baseUri}/personas/eliminar/{$persona['ci']}",
+					'href' => "{uri/base}/personas/eliminar/{$persona['ci']}",
 					'text' => 'Eliminar',
 					'title' => "Eliminar {$persona['nombre']} {$persona['apellido']}."
 				]

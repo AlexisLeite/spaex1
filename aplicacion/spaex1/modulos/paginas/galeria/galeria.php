@@ -14,7 +14,7 @@ class Modulo
 	{
 		$this->data['fotos'] = array_values(array_map(function($el)
 		{
-			return conf('baseUri') . "/aplicacion/spaex1/modulos/paginas/galeria/pictures/$el";
+			return conf('uri/base') . "/aplicacion/spaex1/modulos/paginas/galeria/pictures/$el";
 		},array_filter(scandir(__DIR__ . '/pictures'),function($el)
 		{
 			return !in_array($el, ['..','.']);

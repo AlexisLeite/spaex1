@@ -1,6 +1,7 @@
 [
 	"gestorFramework:gestor",
 	"seccion:ALPHA",
+	"pagina:ALPHA",
 	"seccion:ALPHA/accion:ALPHA",
 	"seccion:personas/accion:ALPHA",
 	"seccion:personas/accion:ALPHA/persona:NUM",

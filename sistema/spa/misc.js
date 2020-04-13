@@ -31,7 +31,7 @@ var Regex = new function()
 
 var Conf = new function()
 {
-	this.baseUri = '{baseUri}';
+	this.uri = {base: '{uri/base}'};
 }
 
 var Basic = new function()

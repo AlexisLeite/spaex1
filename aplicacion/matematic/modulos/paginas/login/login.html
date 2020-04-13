@@ -1,7 +1,7 @@
 <div if='usuario' class='outstandBox'>
 	<div class='bienvenida'>
 	<h2>Bienvenido {usuario}.</h2>
-	<a href='{baseUri}/logout'>Salir</a></div>
+	<a href='{uri/base}/logout'>Salir</a></div>
 	<else>
 		<h3>Login</h3>
 		<nt if='errorAutenticacion'>
@@ -10,7 +10,7 @@
 		<nt if='motivoRedireccion'>
 		<strong>{motivoRedireccion}<br></strong>
 		Pronto te redireccionaremos a '{direccionRedireccion}'.</nt>
-		<form method='post' action='{baseUri}/login'>
+		<form method='post' action='{uri/base}/login'>
 		<input type='text' name='User'><br>
 		<input type='password' name='Pass'><br>
 		<input type='checkbox' name='Recordar' checked>Recuerdame<br>

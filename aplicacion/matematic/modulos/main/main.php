@@ -13,11 +13,11 @@ class Modulo
 	[
 		'menuPrincipal' =>
 		[
-			['link' => '{baseUri}/', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
-			['link' => '{baseUri}/tabla', 'title' => 'Prueba de tablas', 'text' => 'Tabla'],
-			['link' => '{baseUri}/gestor', 'title' => 'Gestor de secciones', 'text' => 'Conf'],
-			['link' => '{baseUri}/personas', 'title' => 'Gestor de personas', 'text' => 'Personas'],
-			['link' => '{baseUri}/login', 'title' => 'Iniciar o cerrar sesion', 'text' => 'Login']
+			['link' => '{uri/base}/', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
+			['link' => '{uri/base}/tabla', 'title' => 'Prueba de tablas', 'text' => 'Tabla'],
+			['link' => '{uri/base}/gestor', 'title' => 'Gestor de secciones', 'text' => 'Conf'],
+			['link' => '{uri/base}/personas', 'title' => 'Gestor de personas', 'text' => 'Personas'],
+			['link' => '{uri/base}/login', 'title' => 'Iniciar o cerrar sesion', 'text' => 'Login']
 		]
 	];
 

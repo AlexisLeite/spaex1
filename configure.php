@@ -29,7 +29,7 @@ $baseUri = "$protocolo$hostName$pathPrefix";
 require_once(__DIR__ . '/sistema/clases/conf/conf.php');
 
 Conf::set('rutaApp',__DIR__);
-Conf::set('baseUri',$baseUri);
+Conf::set('uri/base',$baseUri);
 Conf::set('habilitarGestor',$habilitarGestor);
 
 spl_autoload_register(function ($nombreClase) 

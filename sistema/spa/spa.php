@@ -28,7 +28,7 @@ function processFile($nombre)
 	while(list($key,$line) = each($file))
 		$print .= replace_clogs($line,$nombre,$key);
 
-	$print = preg_replace('/\{baseUri}/', Conf::get('baseUri'), $print);
+	$print = preg_replace('/\{uri\/base}/', Conf::get('uri/base'), $print);
 
 	return $print;
 }

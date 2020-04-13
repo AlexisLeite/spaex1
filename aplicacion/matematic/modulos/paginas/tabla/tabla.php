@@ -34,7 +34,7 @@ class Modulo
 							],
 							[ // Cell 1 de Row 1 de thead
 								'mode' => 'href',
-								'href' => '{baseUri}/tabla',
+								'href' => '{uri/base}/tabla',
 								'title' => 'Tablas',
 								'text' => 'Tablas',
 								'class' => 'NodeClass',

@@ -12,7 +12,7 @@ class Modulo
 	[
 		'form' =>
 		[
-			'action' => '{baseUri}/personas/agregar',
+			'action' => '{uri/base}/personas/agregar',
 			'fields' => 
 			[
 				['label'=>'C.I.','name'=>'Ci','type'=>'text', 'placeholder'=>'1.111.111-1'],

@@ -12,7 +12,7 @@ class Modulo
 	[
 		'form' =>
 		[
-			'action' => '{baseUri}/personas/modificar',
+			'action' => '{uri/base}/personas/modificar',
 			'fields' => 
 			[
 				['label'=>'C.I.','name'=>'Ci','type'=>'text/readonly'],

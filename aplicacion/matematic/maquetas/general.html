@@ -10,18 +10,18 @@
 		<!-- Fuentes de google -->
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Candal" />
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap" />
-		<link rel="stylesheet" type="text/css" href="{baseUri}/estilos.css" />
-		<link rel="stylesheet" type="text/css" href="{baseUri}/estilosSistema.css" />
+		<link rel="stylesheet" type="text/css" href="{uri/base}/estilos.css" />
+		<link rel="stylesheet" type="text/css" href="{uri/base}/estilosSistema.css" />
 		<script>
-			var baseuri = '{baseUri}';
+			var baseUri = '{uri/base}';
 		</script>
-		<script src="{baseUri}/../common/jquery.js"></script>
-		<script src="{baseUri}/scripts.js"></script>
-		<script src="{baseUri}/spa.js"></script>
+		<script src="{uri/base}/../common/jquery.js"></script>
+		<script src="{uri/base}/scripts.js"></script>
+		<script src="{uri/base}/spa.js"></script>
 	</head>  
 	<body>
 		<div id="Loader"><div></div>Cargando</div>
-		<div id="ErrorDemoraMucho" class='warning'>Algo debe andar mal, se esta demorando mucho. <a href='{baseUri}' id='RecargarPagina' class='spa-active'>Recargar la pagina</a></div>
+		<div id="ErrorDemoraMucho" class='warning'>Algo debe andar mal, se esta demorando mucho. <a href='{uri/base}' id='RecargarPagina' class='spa-active'>Recargar la pagina</a></div>
 		<script>$('#Loader').addClass('Abierto');</script>
 	</body>
 </html>

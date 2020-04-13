@@ -2,13 +2,18 @@
 	"ruta":
 	{
 		"clases": "{rutaApp}/sistema/clases",
-		"common": "{rutaApp}/../common",
+		"common": "{rutaApp}/sistema/external",
 		"maquetas": "{rutaApp}/aplicacion/spaex1/maquetas",
 		"modulos": "{rutaApp}/aplicacion/spaex1/modulos",
 		"moduloGestor": "/../../../sistema/gestor",
 		"phpquery": "{ruta/common}/phpquery.php",
 		"servicios": "{rutaApp}/aplicacion/servicios",
 		"sistema": "{rutaApp}/sistema"
+	},
+	"uri":
+	{
+		"base": "",
+		"common": "{uri/base}/sistema/external"
 	},
 	"moduloRaiz": "main",
 	"maquetaRaiz": "general.html"

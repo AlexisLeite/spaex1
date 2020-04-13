@@ -40,7 +40,7 @@ class Router
 	public static function run($ruta = null)
 	{
 		Self::$ficheroRutas = conf('ruta/conf') . '/rutas.json'	;
-		Self::$dominio = conf('baseUri');
+		Self::$dominio = conf('uri/base');
 		if(!$ruta && $ruta !== '') $ruta = $_GET[Self::$variableGetQueContieneRuta];
 		array_push(Self::$rutasProcesadas,$ruta);
 		Self::creararrayRuta();

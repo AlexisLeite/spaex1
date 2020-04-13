@@ -4,35 +4,34 @@
 
 <!-- MarkdownTOC -->
 
-1. [Objetivo:](#objetivo)
-1. [Introducción](#introducción)
-	1. [Configuración del framework, ultrasencilla!](#configuración-del-framework-ultrasencilla)
-	1. [Sintaxis básica](#sintaxis-básica)
-		1. [Declaración de una variable](#declaración-de-una-variable)
-			1. [Declaración de atributos dinámicos](#declaración-de-atributos-dinámicos)
-		1. [El array data](#el-array-data)
-		1. [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-información)
-		1. [Utilización de intérpretes](#utilización-de-intérpretes)
-			1. [El intérprete if](#el-intérprete-if)
-			1. [El intérprete forrepeater](#el-intérprete-forrepeater)
-			1. [El intérprete foreach](#el-intérprete-foreach)
-1. [Trabajando con módulos](#trabajando-con-módulos)
-	1. [¿Qué son los módulos?](#¿qué-son-los-módulos)
-	1. [Creación de módulos](#creación-de-módulos)
-	1. [Vinculación de módulos](#vinculación-de-módulos)
-	1. [Desarrollo de los módulos](#desarrollo-de-los-módulos)
-	1. [Ejemplo 1](#ejemplo-1)
-		1. [Construcción de un sitio sencillo con galería de fotos.](#construcción-de-un-sitio-sencillo-con-galería-de-fotos)
-1. [Estructura del framework](#estructura-del-framework)
-	1. [Directorio raíz](#directorio-raíz)
-	1. [Directorio aplicación](#directorio-aplicación)
-	1. [Directorio sistema](#directorio-sistema)
-1. [Componentes principales](#componentes-principales)
-	1. [Router](#router)
+- [Objetivo:](#objetivo)
+- [Introducción](#introduccion)
+	- [Configuración del framework, ultrasencilla!](#configuracion-del-framework-ultrasencilla)
+	- [Sintaxis básica](#sintaxis-basica)
+		- [Declaración de una variable](#declaracion-de-una-variable)
+			- [Declaración de atributos dinámicos](#declaracion-de-atributos-dinamicos)
+		- [El array data](#el-array-data)
+		- [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-informacion)
+		- [Utilización de intérpretes](#utilizacion-de-interpretes)
+			- [El intérprete if](#el-interprete-if)
+			- [El intérprete forrepeater](#el-interprete-forrepeater)
+			- [El intérprete foreach](#el-interprete-foreach)
+- [Trabajando con módulos](#trabajando-con-modulos)
+	- [¿Qué son los módulos?](#que-son-los-modulos)
+	- [Creación de módulos](#creacion-de-modulos)
+	- [Vinculación de módulos](#vinculacion-de-modulos)
+	- [Desarrollo de los módulos](#desarrollo-de-los-modulos)
+	- [Ejemplo 1](#ejemplo-1)
+		- [Construcción de un sitio sencillo con galería de fotos.](#construccion-de-un-sitio-sencillo-con-galeria-de-fotos)
+- [Estructura del framework](#estructura-del-framework)
+	- [Directorio raíz](#directorio-raiz)
+	- [Directorio aplicación](#directorio-aplicacion)
+	- [Directorio sistema](#directorio-sistema)
+- [Componentes principales](#componentes-principales)
+	- [Router](#router)
 
 <!-- /MarkdownTOC -->
 
-<a id="objetivo"></a>
 ## Objetivo:
 
 Desarrollar un software en php y javascript que sea capaz de atender las necesidades del diseño de una web o aplicación que funcione en un navegador web y cumpla con las características necesarias de todo sitio SPA (Single Page Application). Se trabajará para ello en PHP y Javascript, con los frameworks phpQuery y jQuery respectivamente para la facilidad en el manejo de las estructuras DOM de ambas caras del software. 
@@ -41,7 +40,7 @@ El software debe ser capaz de interpretar una estructura HTML enriquecida con pa
 
 Para facilitar la tarea de desarrollo, todo el software estará dividido en lo que se llamarán módulos. Los mismos serán unidades más pequeñas que se encargarán de tareas específicas. Cada módulo contará con su maqueta HTML, su hoja de estilos CSS, su script Javascript y su script PHP. El framework deberá encargarse de relacionarlos y hacer funcionar todo el conjunto.
 
-![Diagrama entre módulo y cliente](diag-mod-cli.png)
+![Diagrama entre módulo y cliente](documentacion/diag-mod-cli.png)
 
 Como uno de los objetivos más importantes se debe señalar que todo el software estará orientado a ser capaz de atender tanto clientes que no cuenten con Javascript (buscadores principalmente), a los que entregará un documento HTML completamente válido, tanto como a aquellos que si tienen. A estos últimos les entregará una estructura dinámica capaz de actualizarse selectivamente dependiendo del flujo del trabajo. Esto es decir, el framework será capaz en todo momento de entender qué partes del documento se deben actualizar.
 
@@ -51,7 +50,6 @@ En definitiva, el objetivo de este framework será en todo momento facilitar la 
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="introducción"></a>
 ## Introducción
 
 El presente framework brindará al desarrollador la posibilidad de desarrollar aplicaciones SPA (Single Page Application), ejecutables a través de un navegador web capaz de soportar html5 y javascript, es decir, cualquier navegador moderno. La diferencia con cualquier aplicación SPA disponible hoy en día, es que ofrecerá la posibilidad de brindar de forma sencilla, un html válido a cualquier cliente que no utilice javascript. Esto es, cuando un buscador por ejemplo entre al sitio, recibirá la misma estructura de información que lo hiciera un usuario común.
@@ -64,7 +62,6 @@ Cualquier persona que quisiera utilizar este framework, debería comenzar entend
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="configuración-del-framework-ultrasencilla"></a>
 ### Configuración del framework, ultrasencilla!
 
 La configuración del framework se realiza dentro del fichero **configure.php** que se encuentra en la raíz del sistema. Para ello debemos realizar las modificaciones:
@@ -99,20 +96,18 @@ $habilitarGestor = true;
 	"gestorFramework:gestor"
 ```
  	
- - En el directorio de módulos, debe existir el módulo gestor. Si se hubiera borrado accidentalmente, se puede descargar una copia [aquí](gestor.rar).
+ - En el directorio de módulos, debe existir el módulo gestor. Si se hubiera borrado accidentalmente, se puede descargar una copia [aquí](documentacion/gestor.rar).
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="sintaxis-básica"></a>
 ### Sintaxis básica
 
 Cuando recién instala el framework en su servidor, contará con una estructura similar a la siguiente: 
 
-![Árbol de ficheros de la raíz](arbol-raiz.png)
+![Árbol de ficheros de la raíz](documentacion/arbol-raiz.png)
 
 Si desea conocer en profundidad esta estructura, puede dirigirse a [Estructura del framework](#estructura-del-framework). Por ahora nos preocuparemos solamente por el directorio /aplicacion/modulos/main. Al entrar encontrará dos ficheros: main.html y main.php. Estos ficheros son los que definen al módulo *main*. Si Ud. entra en main.html, encontrará una estructura básica de bienvenida:
 
-<a id="declaración-de-una-variable"></a>
 #### Declaración de una variable
 
 ```html
@@ -168,7 +163,6 @@ En este pequeño ejemplo, vemos que se declara un array con 3 valores, los cuale
 
 Deberá notarse que el nombre del índice escogido en el array data es el mismo que el nombre de la variable declarada en la maqueta. De esta misma manera, podríamos también declarar atributos:
 
-<a id="declaración-de-atributos-dinámicos"></a>
 ##### Declaración de atributos dinámicos
 
 Para declarar atributos dinámicos, utilizaremos la misma sintaxis que para [declarar una variable](#declaración-de-una-variable). Encerraremos el nombre de la variable que queremos que sea utilizada por el framework entre llaves { y }. La única diferencia será que lo haremos dentro de las comillas que establecen el valor del atributo que queremos declarar:
@@ -198,7 +192,6 @@ Y el framework haría el trabajo de actualizar la información en la pantalla de
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="el-array-data"></a>
 #### El array data
 
 El array data es un array que estará presente en todos los módulos. Siempre será público y es la fuente de información que utilizará el framework para desarrollar las maquetas. Más adelante veremos que hay muchas formas de expandir la funcionalidad de la maqueta pero por ahora concentrémonos en lo básico.
@@ -231,7 +224,6 @@ public $data =
 
 Entonces, esta información podría ser accedida desde la maqueta en cualquier momento. Por ejemplo, podríamos decir:
 
-<a id="sintaxis-de-acceso-a-la-información"></a>
 #### Sintaxis de acceso a la información
 ```html
 <div><strong>{autos/0/marca}</strong> - {autos/0/modelo}</div>
@@ -246,7 +238,6 @@ Esta es la forma más sencilla de utilizar la información de los módulos, pero
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="utilización-de-intérpretes"></a>
 #### Utilización de intérpretes
 
 Los intérpretes son fracciones de código destinadas a extender la funcionalidad del framework. Cada uno de ellos cumplirá con una función distinta y podrán ser declarados dentro de la maqueta para utilizarlos. Existen algunos intérpretes sencillos y otros más complejos. 
@@ -267,7 +258,6 @@ Para comenzar a entenderlos, explicaremos el uso del más sencillo de todos: **e
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="el-intérprete-if"></a>
 ##### El intérprete if
 
 El intérprete if es una representación de la estructura if típica en cualquier lenguaje de programación. La gran diferencia es que éste no evalúa una expresión, como generalmente lo hacen los lenguajes, sino que solamente evalua una variable. Veámoslo con un ejemplo. Imaginemos que queremos mostrar un mensaje o no al usuario, dependiendo de si éste ha iniciado sesion. Para ello, estableceríamos la siguiente declaración en la maqueta:
@@ -302,7 +292,6 @@ La variable indicada en la especificación del intérprete, será falsa si se cu
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="el-intérprete-forrepeater"></a>
 ##### El intérprete forrepeater
 
 Otro aspecto muy importante de los intérpretes, es la capacidad de generar estructuras repetitivas. El intérprete **forrepeater** recorrerá la variable especificada en el llamado al intérprete y generará una estructura de repeticiones basándose en la declaración del mismo. 
@@ -355,7 +344,6 @@ Si bien con esto logramos añadir un poco más de funcionalidad a nuestra maquet
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="el-intérprete-foreach"></a>
 ##### El intérprete foreach
 
 El intérprete foreach es el segundo de los repetidores. Su función es generar una estructura repetitiva, permitiendo el acceso a las diferentes propiedades de los objetos que queremos repetir. Retomemos el ejemplo de los autos para entenderlo:
@@ -392,10 +380,8 @@ Existen dos intérpretes más establecidos por defecto, pero no los trabajaremos
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="trabajando-con-módulos"></a>
 ## Trabajando con módulos
 
-<a id="¿qué-son-los-módulos"></a>
 ### ¿Qué son los módulos?
 
 Los módulos son la unidad más básica de producción de información del framework. Toda la aplicación desarrollada se sustentará en estas unidades y siendo bien entendidas, permitirán la organización de la estructura de la misma de forma ordenada y accesible. El objetivo de esta división será siempre la facilidad del desarrollo, mantenimiento y evolución de la aplicación creada.
@@ -424,7 +410,6 @@ Si bien a primera vista puede parecer que la estructura es demasiado compleja, e
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="creación-de-módulos"></a>
 ### Creación de módulos
 
 El framework trae incorporado un creador de módulos que puede ser accedido a través del URI www.tudominio.com/gestor. La única forma de acceder a él es [configurando](#desarrollo-de-framework-spa) el framework para que acepte mostrar el gestor. Utilizándolo, nos evitamos la molestia de tener que generar manualmente la estructura del módulo, que si bien no es demasiado compleja, puede resultar tedioso hacerlo cada vez que queremos crear uno nuevo.
@@ -434,7 +419,7 @@ Si la configuración está bien realizada, se debería poder tipear en el navega
 	**Importante:** El módulo gestor será parte del directorio de módulos. 
 	Sólamente funcionará la actual configuración si éste no fue eliminado.
 
-![Pantalla del gestor](pantalla-gestor.png)
+![Pantalla del gestor](documentacion/pantalla-gestor.png)
 
 La creación de módulos en el presente framework, se hará a través de la especificación de la ruta del módulo. Para ello, se debe ingresar en el campo nombre de módulo la ruta del módulo que desee crear. Esta ruta es la misma que será accedida para incrustar el módulo en otra maqueta y deberá respetar la [sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-información).
 
@@ -461,7 +446,6 @@ Esto hubiera generado la misma estructura de informacion que el bloque anterior,
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="vinculación-de-módulos"></a>
 ### Vinculación de módulos
 
 La creación de módulos no tendría ningún sentido si no pudiesen ser vinculados. La vinculación entre ellos es la forma en la que la estructura toma sentido y también la forma en que se logra generar estructuras dinámicas en cualquier dimension.
@@ -489,9 +473,9 @@ public $data =
 [
 	'opciones' =>
 	[
-		['href' => '{baseUri}/Inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
-		['href' => '{baseUri}/About', 'title' => 'Saber más sobre nosotros.', 'text' => 'Nosotros'],
-		['href' => '{baseUri}/Contacto', 'title' => 'Opciones de contacto', 'text' => 'Contacto'],
+		['href' => '{uri/base}/Inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
+		['href' => '{uri/base}/About', 'title' => 'Saber más sobre nosotros.', 'text' => 'Nosotros'],
+		['href' => '{uri/base}/Contacto', 'title' => 'Opciones de contacto', 'text' => 'Contacto'],
 	]
 ];
 ```
@@ -528,7 +512,7 @@ En el constructor, el parámetro $args recibido por el módulo declarado con el 
 ```php
 $args = 
 [
-	'href' => '{baseUri}/Inicio', 
+	'href' => '{uri/base}/Inicio', 
 	'title' => 'Ir al inicio', 
 	'text' => 'Inicio'
 ]
@@ -543,7 +527,6 @@ Lograríamos un menú de navegación basado en listas completamente funcional. S
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="desarrollo-de-los-módulos"></a>
 ### Desarrollo de los módulos
 
 El desarrollo de los módulos sigue un orden específico que permite definir reglas claras a la hora de escribir una maqueta compleja:
@@ -552,28 +535,35 @@ El desarrollo de los módulos sigue un orden específico que permite definir reg
 2. **Se interpretan las variables:** Luego se buscan todas las variables dentro de la maqueta y se reemplazan por sus valores correspondientes. Es importante notar que solamente se podrán escribir en la maqueta variables que puedan ser transformadas a string. Si se declara una variable cuyo valor no puede ser transformado a string, resultará en un error.
 3. **Se incrustan los módulos:** Una vez que todas las variables fueron interpretadas, se llama a los módulos correspondientes, los que hayan quedado declarados en la maqueta.
 
-![Diagrama de desarrollo de los módulos](diag-desarrollo-modulos.png)
+![Diagrama de desarrollo de los módulos](documentacion/diag-desarrollo-modulos.png)
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="ejemplo-1"></a>
 ### Ejemplo 1
-<a id="construcción-de-un-sitio-sencillo-con-galería-de-fotos"></a>
 #### Construcción de un sitio sencillo con galería de fotos.
 
 Imaginemos un sitio web bien elemental en donde se quiere mostrar una bienvenida, una sección de contacto y una galería sencilla, en donde solamente se mostraría un cuadro por cada foto, y cada foto a su vez es cliqueable para acceder al fichero de la misma.
 
-La estructura ya terminada del documento, puede ser accedida haciendo clic [Aquí](ejemplo1.rar)
+La estructura ya terminada del documento, puede ser accedida haciendo clic [Aquí](documentacion/ejemplo1.rar)
 
-Una vez que tengamos instalado y [configurado](#configuración-del-framework-ultrasencilla) nuestro framework, podríamos simplemente descomprimir el [fichero rar](ejemplo1.rar) del ejemplo dentro del directorio de módulos o crear los archivos con el contenido especificado a continuación.
+Una vez que tengamos instalado y [configurado](#configuración-del-framework-ultrasencilla) nuestro framework, podríamos simplemente descomprimir el [fichero rar](documentacion/ejemplo1.rar) del ejemplo dentro del directorio de módulos o crear los archivos con el contenido especificado a continuación.
 
 Para una estructura de este tipo, el desarrollador tendría que generar un árbol de información similar al siguiente:
 
-![Árbol de ficheros del ejemplo 1](arbol-ejemplo-1.png)
+![Árbol de ficheros del ejemplo 1](documentacion/arbol-ejemplo-1.png)
 
-Una vez desarrollado el contenido de los distintos ficheros, deberíamos obtener un sitio similar al siguiente:
+Una vez desarrollado el contenido de los distintos ficheros, solamente nos quedaría establecer el fichero de rutas. Si prestamos atención al contenido de main.html, éste carga un modulo de clase 'paginas/{pagina}'. Esto significa que antes de cargar el módulo, el framework reemplaza la variable página por su contenido en el array data. Si miramos ahora main.php, veremos que se le asigna el valor de Router::get('pagina'). Más adelante se explica en profundidad el uso del Router, pero por ahora, solamente colocaremos la siguiente entrada en el fichero **rutas.json** que se encuentra en /aplicacion/conf:
 
-![Diagrama de desarrollo de los módulos](captura-galeria-fotos.png)
+
+```json
+[
+	"pagina:ALPHA"
+]
+```
+
+Debemos asegurarnos de que reemplazamos todo el contenido del archivo rutas.json por esta entrada. Esto le indicaría al router que la cadena de texto que sigue a la uri de nuestra aplicación, la debe llamar **pagina**. Por ello, cuando desde main.php llamamos a Router::get('pagina'), este nos devuelve el contenido que deseamos. Luego de hecho esto, ya podemos ejecutar nuestra aplicación y debería estar perfectamente funcional. Aquí hay una vista previa de cómo debería quedar:
+
+![Diagrama de desarrollo de los módulos](documentacion/captura-galeria-fotos.png)
 
 El contenido de cada fichero es detallado a continuación, si bien puede parecer compleja la estructura sobre todo de los ficheros php, créeme que no lo es. Sobre todo considerando que el framework incorpora su propio [creador de módulos](#creación-de-módulos).
 
@@ -619,16 +609,16 @@ class Modulo
 	[
 		'menuPrincipal' =>
 		[
-			['link' => '{baseUri}/inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
-			['link' => '{baseUri}/galeria', 'title' => 'Galeria de fotos', 'text' => 'Galeria'],
-			['link' => '{baseUri}/contacto', 'title' => 'Medios de contacto', 'text' => 'Contacto']
+			['link' => '{uri/base}/inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
+			['link' => '{uri/base}/galeria', 'title' => 'Galeria de fotos', 'text' => 'Galeria'],
+			['link' => '{uri/base}/contacto', 'title' => 'Medios de contacto', 'text' => 'Contacto']
 		]
 	];
 
 	public function __construct($args = [])
 	{
-		$seccion = \Router::get('seccion');
-		$this->data['pagina'] = $seccion ? $seccion : 'inicio';
+		$pagina = \Router::get('pagina');
+		$this->data['pagina'] = $pagina ? $pagina : 'inicio';
 
 		\Conf::set('tituloPagina','Framework SPA');
 		\Conf::set('sloganPagina','Super sencillo');
@@ -725,7 +715,7 @@ class Modulo
 	<a href='{imagenGrande}' title='Abrir imagen' target='_blank'><img src='{imagenGrande}' />
 </div>
 <div forrepeater='fotos'>
-	<div class='MarcoFoto'><a href='{baseUri}/galeria/{index}' title='Abrir imagen'><img src='{fotos}' /></a></div>
+	<div class='MarcoFoto'><a href='{uri/base}/galeria/{index}' title='Abrir imagen'><img src='{fotos}' /></a></div>
 </div>
 ```
 
@@ -749,7 +739,7 @@ class Modulo
 	{
 		$this->data['fotos'] = array_values(array_map(function($el)
 		{
-			return conf('baseUri') . "/aplicacion/spaex1/modulos/paginas/galeria/pictures/$el";
+			return conf('uri/base') . "/aplicacion/spaex1/modulos/paginas/galeria/pictures/$el";
 		},array_filter(scandir(__DIR__ . '/pictures'),function($el)
 		{
 			return !in_array($el, ['..','.']);
@@ -773,16 +763,14 @@ class Modulo
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="estructura-del-framework"></a>
 ## Estructura del framework
 
 Apuntando a cumplir con la condición de que todo contenido desarrollado debe ocupar un sitio específico dentro del framework, de forma tal que la solución de problemas sea sencilla y rápida, así como también los posteriores desarrollos del mismo, el framework está dividido en varias secciones que pueden ser facilmente identificadas a través de la simple observación del árbol de directorios.
 
-![Árbol de ficheros de la raíz](arbol-raiz.png)
+![Árbol de ficheros de la raíz](documentacion/arbol-raiz.png)
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="directorio-raíz"></a>
 ### Directorio raíz
 
 En la raíz de la aplicación tenemos 8 archivos claves para el funcionamiento del sistema: 
@@ -796,7 +784,6 @@ En la raíz de la aplicación tenemos 8 archivos claves para el funcionamiento d
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="directorio-aplicación"></a>
 ### Directorio aplicación
 
 ('*aplicacion*') En éste se desarrolla la aplicación que el diseñador quiera llevar a cabo, permitiendo la correcta agrupación de los distintos módulos. Su objetivo es crear un espacio que permita separar la lógica de la aplicación de las tareas correspondientes al framework. El mismo estará compuesto a su vez por tres directorios:
@@ -813,7 +800,6 @@ En la raíz de la aplicación tenemos 8 archivos claves para el funcionamiento d
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="directorio-sistema"></a>
 ### Directorio sistema
 
 En el directorio sistema están agrupados todos los componentes relacionados al funcionamiento del framework. El mismo a su vez está compuesto por dos directorios:
@@ -842,10 +828,8 @@ En el directorio sistema están agrupados todos los componentes relacionados al 
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-<a id="componentes-principales"></a>
 ## Componentes principales
 
-<a id="router"></a>
 ### Router
 
 El router es el encargado de desglosar las rutas recibidas y disponer de dicha información para ser utilizada por otros componentes. Será el primer componente que actúe en el sistema ya que a partir de éste se desarrollarán las demás actividades. La forma en que compartirá la información será a través de métodos y propiedades públicas que podrán ser accedidas desde los demás componentes en todo momento. Además permitirá el cambio de ruta por parte de los otros componentes, esto será una ventaja especialmente en el proceso de logueo.
@@ -853,5 +837,3 @@ El router es el encargado de desglosar las rutas recibidas y disponer de dicha i
 Se implementará a través de una clase estática que deberá ser inicializada mediante el método **Router::run()** al comenzar la ejecución del sistema. Su primera tarea será la de dividir la ruta en directorios y almacenarla en la propiedad pública **Router::$arrayRuta**. Luego procederá a leer la hoja de rutas, ubicada dentro del fichero rutas.json que se encuentra dentro del directorio del router.
 
 [Volver arriba](#desarrollo-de-framework-spa)
-[]: Diagrama de desarrollo de los módulos
-(diag-desarrollo-modulos.png): 

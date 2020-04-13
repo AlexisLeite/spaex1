@@ -12,7 +12,7 @@ class Modulo
 	[
 		'acciones' =>
 		[
-			['href' => '{baseUri}/personas/agregar', 'title' => 'Agregar personas al sistema', 'texto' => 'Agregar']
+			['href' => '{uri/base}/personas/agregar', 'title' => 'Agregar personas al sistema', 'texto' => 'Agregar']
 		]
 	];
 

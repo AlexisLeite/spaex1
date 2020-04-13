@@ -13,16 +13,16 @@ class Modulo
 	[
 		'menuPrincipal' =>
 		[
-			['link' => '{baseUri}/inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
-			['link' => '{baseUri}/galeria', 'title' => 'Galeria de fotos', 'text' => 'Galeria'],
-			['link' => '{baseUri}/contacto', 'title' => 'Medios de contacto', 'text' => 'Contacto']
+			['link' => '{uri/base}/inicio', 'title' => 'Ir al inicio', 'text' => 'Inicio'],
+			['link' => '{uri/base}/galeria', 'title' => 'Galeria de fotos', 'text' => 'Galeria'],
+			['link' => '{uri/base}/contacto', 'title' => 'Medios de contacto', 'text' => 'Contacto']
 		]
 	];
 
 	public function __construct($args = [])
 	{
-		$seccion = \Router::get('seccion');
-		$this->data['pagina'] = $seccion ? $seccion : 'inicio';
+		$pagina = \Router::get('pagina');
+		$this->data['pagina'] = $pagina ? $pagina : 'inicio';
 
 		\Conf::set('tituloPagina','Framework SPA');
 		\Conf::set('sloganPagina','Super sencillo');

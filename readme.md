@@ -26,10 +26,15 @@
 1. [Estructura de información](#estructura-de-informacion)
 	1. [Coherencia entre cliente y servidor](#coherencia-entre-cliente-y-servidor)
 1. [Componentes avanzados](#componentes-avanzados)
-	1. [El router](#el-router)
+	1. [Router](#router)
 		1. [Métodos públicos](#metodos-publicos)
 		1. [Propiedades públicas](#propiedades-publicas)
 		1. [Configurando el router](#configurando-el-router)
+		1. [Método de selección de ruta](#metodo-de-seleccion-de-ruta)
+	1. [Identificador](#identificador)
+	1. [Intérpretes avanzados](#interpretes-avanzados)
+	1. [Debugger](#debugger)
+	1. [Comunicador](#comunicador)
 1. [Estructura del framework](#estructura-del-framework)
 	1. [Directorio raíz](#directorio-raiz)
 	1. [Directorio aplicación](#directorio-aplicacion)
@@ -95,7 +100,7 @@ $habilitarGestor = true;
 
 **Importante:** Para que la variable $habilitarGestor surta efecto, deben cumplirse dos condiciones:
 
- - En el árbol de rutas, debe existir la siguiente ruta:
+ - En el árbol de rutas, debe existir la siguiente ruta: (ver [Configurando el router](#configurando-el-router))
  
 ```
 	"gestorFramework:gestor"
@@ -806,7 +811,11 @@ El framework incluye algunas funcionalidades más complejas que nos facilitan ta
 
  - **Otros intérpretes:** El framework cuenta por el momento con dos intérpretes más además de los ya mensionados. Éstos son el **modulerepeater** y el **tablemaker**. El primero se utilizará en algunas situaciones particulares, en donde la estructura del forrepeater o del foreach pudieran complicar las cosas. El segundo toma un array de datos y lo convierte automáticamente en una tabla.
 
-### El router
+ - **Debugger:** El framework trae incorporado un sistema de debug, que permite imprimir contenido en el navegador incluso a través de las llamadas asíncronas generadas por el usuario. Por defecto trae programadas las funcionalidades para mostrar los resulados del Router, del identificador y del comunicador.
+
+ - **Comunicador:** El comunicador es el componente pensado para realizar comunicaciones con servicios u otros sitios. Su funcionalidad es muy limitada y debe ser ampliada, pero sirve para concentrar las tareas de comunicación en un solo lugar.
+
+### Router
 
 El router está inspirado en el modelo ofrecido en el libro **PHP MASTER: Write cutting-edge code** de Lorna Mitchell, Davey Shafik y Matthew Turland, sobre todo en la parte de interpretación de la hoja de rutas. Su objetivo es facilitar al desarrollador la construcción de una aplicación basada en rutas amigables, sin la necesidad de lidiar con la interpretación de las mismas. Para ello ofrece la posibilidad de editar un archivo de rutas que mantiene un formato similar al del libro mencionado. El api del Router es:
 
@@ -840,7 +849,7 @@ El router se configurará modificando el contenido de la hoja de rutas que se en
 
 **Si hubiese algún defecto en dicho formato, el router no podría funcionar.**
 
-El router siempre contrastará con la cadena de caracteres que siguen al dominio y ruta de la aplicación. Es decir, si la aplicación se encuentra dentro del dominio y rutas www.dominio.com/ruta, cuando el usuario acceda a la uri www.dominio.com/ruta/pagina/accion/item, el router contrastará las rutas con pagina/accion/item y devolverá el resultado más acertado. Además, procesará las rutas directorio por directorio, es decir, que las mismas se compondrán de distintas instrucciones separadas por una /. Y cada directorio mantiene una de las siguientes estructuras:
+El router siempre contrastará con la cadena de caracteres que siguen al dominio y ruta de la aplicación. Es decir, si la aplicación se encuentra dentro del dominio y ruta www.dominio.com/ruta, cuando el usuario acceda a la uri www.dominio.com/ruta/pagina/accion/item, el router contrastará las rutas con **pagina/accion/item** y devolverá el resultado más acertado. Además, procesará las rutas directorio por directorio, es decir, que las mismas se compondrán de distintas instrucciones separadas por una /. Y cada directorio mantiene una de las siguientes estructuras:
 
 - **cadena**: Es una cadena de caracteres que no representa ninguna variable y no es representada en el router. Si se ingresa este tipo de directorio, el router solamente busca si existe coincidencia con la ruta recibida pero no genera ningún tipo de información a partir de ella.
 
@@ -854,8 +863,65 @@ El router siempre contrastará con la cadena de caracteres que siguen al dominio
 	- **ALL:** => Contrasta con cualquier caracter que no sea una /.
 	- **ETC:** => Contrasta con cualquier caracter, incluso una /. Este tipo se utiliza al final de las rutas para indicar que pueden contener otros caracteres no determinados.
 
+Las entradas de la hoja de rutas serán contrastadas con la ruta actual de forma exacta, es decir, desde el principio al fin. Esto quiere decir, si existe la siguiente entrada en la hoja de rutas:
+
+	pagina:ALPHA
+
+El router contrastará con:
+
+	inicio
+	galeria
+	contacto
+	login
+
+Pero no contrastará con:
+
+	galeria/ordenar/ascendiente
+	contacto/emails
+	login/registrar
+
+Para poder contrastar con los últimos tres ejemplos, deberían existir las siguientes entradas:
+
+	pagina:ALPHA/accion:ALPHA
+	pagina:ALPHA/accion:ordenar/orden:ALPHA
+
+Como se puede ver, se agregó una última entrada en la hoja de rutas que coincide con la entrada de galería, indicando además una cadena estática que es ordenar.
+
+Aún así, la siguiente ruta no contrastaría con el router:
+
+	galeria/fachada-de-casa.png
+
+Para que lo hiciera, deberíamos agregar la entrada:
+
+	pagina:galeria/imagen:ALL
+
+Otra vez, agregamos una entrada específica para galeria, con la variable imagen y tipo ALL. No pareciendo muy útil por el momento, lo sería si existiese una ruta que apunte hacia:
+
+	contacto/numero-de-telefono
+
+Por poner un ejemplo solamente. Entonces con la siguiente entrada:
+
+	pagina:contacto/tipo:ALL
+
+El router podría decidir correctamente qué nombre le da a las diferentes variables que debe procesar.
+
+#### Método de selección de ruta
+
+Siendo relativamente sencillo, el router es muy poderoso y otorga muchas posibilidades. Para poder determinar qué entrada de la hoja de rutas debe utilizar en cada situación, sigue un proceso bien especificado. Entendiendo este proceso, podremos determinar de forma mucho más efectiva las rutas que crearemos en nuestro fichero de rutas, de acuerdo a la aplicación que estemos creando.
+
+![Proceso de selección de ruta](documentacion/diag-router-seleccion-ruta.png)
+
+**Aclaración:** El anterior diagrama hace referencia a nivel actual. Esto es así ya que el router fracciona la ruta en directorios y les llama niveles. Siendo el primer directorio el nivel 0, el segundo el nivel 1 y así sucesivamente.
 
 [Volver arriba](#desarrollo-de-framework-spa)
+
+### Identificador
+
+### Intérpretes avanzados
+
+### Debugger
+
+### Comunicador
 
 ## Estructura del framework
 

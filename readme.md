@@ -4,31 +4,32 @@
 
 <!-- MarkdownTOC -->
 
-- [Objetivo:](#objetivo)
-- [Introducción](#introduccion)
-	- [Configuración del framework, ultrasencilla!](#configuracion-del-framework-ultrasencilla)
-	- [Sintaxis básica](#sintaxis-basica)
-		- [Declaración de una variable](#declaracion-de-una-variable)
-			- [Declaración de atributos dinámicos](#declaracion-de-atributos-dinamicos)
-		- [El array data](#el-array-data)
-		- [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-informacion)
-		- [Utilización de intérpretes](#utilizacion-de-interpretes)
-			- [El intérprete if](#el-interprete-if)
-			- [El intérprete forrepeater](#el-interprete-forrepeater)
-			- [El intérprete foreach](#el-interprete-foreach)
-- [Trabajando con módulos](#trabajando-con-modulos)
-	- [¿Qué son los módulos?](#que-son-los-modulos)
-	- [Creación de módulos](#creacion-de-modulos)
-	- [Vinculación de módulos](#vinculacion-de-modulos)
-	- [Desarrollo de los módulos](#desarrollo-de-los-modulos)
-	- [Ejemplo 1](#ejemplo-1)
-		- [Construcción de un sitio sencillo con galería de fotos.](#construccion-de-un-sitio-sencillo-con-galeria-de-fotos)
-- [Estructura del framework](#estructura-del-framework)
-	- [Directorio raíz](#directorio-raiz)
-	- [Directorio aplicación](#directorio-aplicacion)
-	- [Directorio sistema](#directorio-sistema)
-- [Componentes principales](#componentes-principales)
-	- [Router](#router)
+1. [Objetivo:](#objetivo)
+1. [Introducción](#introduccion)
+	1. [Configuración del framework, ultrasencilla!](#configuracion-del-framework-ultrasencilla)
+	1. [Sintaxis básica](#sintaxis-basica)
+		1. [Declaración de una variable](#declaracion-de-una-variable)
+			1. [Declaración de atributos dinámicos](#declaracion-de-atributos-dinamicos)
+		1. [El array data](#el-array-data)
+		1. [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-informacion)
+		1. [Utilización de intérpretes](#utilizacion-de-interpretes)
+			1. [El intérprete if](#el-interprete-if)
+			1. [El intérprete forrepeater](#el-interprete-forrepeater)
+			1. [El intérprete foreach](#el-interprete-foreach)
+1. [Trabajando con módulos](#trabajando-con-modulos)
+	1. [¿Qué son los módulos?](#que-son-los-modulos)
+	1. [Creación de módulos](#creacion-de-modulos)
+	1. [Vinculación de módulos](#vinculacion-de-modulos)
+	1. [Desarrollo de los módulos](#desarrollo-de-los-modulos)
+	1. [Ejemplo 1](#ejemplo-1)
+		1. [Construcción de un sitio sencillo con galería de fotos.](#construccion-de-un-sitio-sencillo-con-galeria-de-fotos)
+1. [Componentes avanzados](#componentes-avanzados)
+1. [Estructura del framework](#estructura-del-framework)
+	1. [Directorio raíz](#directorio-raiz)
+	1. [Directorio aplicación](#directorio-aplicacion)
+	1. [Directorio sistema](#directorio-sistema)
+1. [Componentes principales](#componentes-principales)
+	1. [Router](#router)
 
 <!-- /MarkdownTOC -->
 
@@ -762,6 +763,14 @@ class Modulo
 ```
 
 [Volver arriba](#desarrollo-de-framework-spa)
+
+## Componentes avanzados
+
+El framework incluye algunas funcionalidades más complejas que nos facilitan tareas muy importantes a la hora de crear una aplicación. Las más destacables son:
+
+ - **Router:** El router ya fue mencionado en el ejemplo anterior y su funcionalidad es la de permitir el uso de URL's amigables tanto para el cliente y los buscadores como para los desarrolladores. Me refiero a esto particularmente porque muchas veces a la hora de desarrollar un sitio, el problema de generar URL amigables para toda la aplicación se vuelve complejo y tedioso. Este componente busca que esto resulte sencillo mediante la utilización de una hoja de rutas fácilmente configurable.
+
+ - **Identificador:** El identificador es un componente que permite el manejo de sesiones de usuario de forma muy sencilla y segura, permitiendo su configuración para restringir de forma selectiva cualquier sector de la aplicación. Para ello admite la generación de reglas en un fichero
 
 ## Estructura del framework
 

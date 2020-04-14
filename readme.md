@@ -10,12 +10,12 @@
 	1. [Sintaxis básica](#sintaxis-basica)
 		1. [Declaración de una variable](#declaracion-de-una-variable)
 			1. [Declaración de atributos dinámicos](#declaracion-de-atributos-dinamicos)
-		1. [El array data](#el-array-data)
-		1. [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-informacion)
-		1. [Utilización de intérpretes](#utilizacion-de-interpretes)
-			1. [El intérprete if](#el-interprete-if)
-			1. [El intérprete forrepeater](#el-interprete-forrepeater)
-			1. [El intérprete foreach](#el-interprete-foreach)
+	1. [El array data](#el-array-data)
+	1. [Sintaxis de acceso a la información](#sintaxis-de-acceso-a-la-informacion)
+	1. [Utilización de intérpretes](#utilizacion-de-interpretes)
+		1. [El intérprete if](#el-interprete-if)
+		1. [El intérprete forrepeater](#el-interprete-forrepeater)
+		1. [El intérprete foreach](#el-interprete-foreach)
 1. [Trabajando con módulos](#trabajando-con-modulos)
 	1. [¿Qué son los módulos?](#que-son-los-modulos)
 	1. [Creación de módulos](#creacion-de-modulos)
@@ -23,13 +23,17 @@
 	1. [Desarrollo de los módulos](#desarrollo-de-los-modulos)
 	1. [Ejemplo 1](#ejemplo-1)
 		1. [Construcción de un sitio sencillo con galería de fotos.](#construccion-de-un-sitio-sencillo-con-galeria-de-fotos)
+1. [Estructura de información](#estructura-de-informacion)
+	1. [Coherencia entre cliente y servidor](#coherencia-entre-cliente-y-servidor)
 1. [Componentes avanzados](#componentes-avanzados)
+	1. [El router](#el-router)
+		1. [Métodos públicos](#metodos-publicos)
+		1. [Propiedades públicas](#propiedades-publicas)
+		1. [Configurando el router](#configurando-el-router)
 1. [Estructura del framework](#estructura-del-framework)
 	1. [Directorio raíz](#directorio-raiz)
 	1. [Directorio aplicación](#directorio-aplicacion)
 	1. [Directorio sistema](#directorio-sistema)
-1. [Componentes principales](#componentes-principales)
-	1. [Router](#router)
 
 <!-- /MarkdownTOC -->
 
@@ -158,7 +162,7 @@ class Modulo
 
 Aquí hay varios conceptos involucrados, pero no nos detengamos en detalles del lenguaje por ahora. De todas formas, la estructura general del módulo será creada por el gestor de módulos. Para saber más, vea la sección [Creación de módulos](#creación-de-módulos). 
 
-Lo que podemos decir por ahora es que la declaración del namespace, el nombre de clase, las propiedades $nombreModulo, $rutaModulo, $data y el método público __construct serán generados automáticamente por el gestor. Como desarrolladores de aplicaciones dentro del framework deberíamos preocuparnos por el contenido del método __construct, que será invocado por el framework cuando el módulo sea declarado. Al ser el método main, será el primero en ser invocado.
+Lo que podemos decir por ahora es que la declaración del namespace, el nombre de clase, las propiedades $nombreModulo, $rutaModulo, $data y el método público \_\_construct serán generados automáticamente por el gestor. Como desarrolladores de aplicaciones dentro del framework deberíamos preocuparnos por el contenido del método \_\_construct, que será invocado por el framework cuando el módulo sea declarado. Al ser el método main, será el primero en ser invocado.
 
 En este pequeño ejemplo, vemos que se declara un array con 3 valores, los cuales corresponden a las diferentes bienvenidas que se darán al usuario. Luego se escoge uno al azar y se asigna al **array data**. Esto es todo lo que necesitamos para crear una pantalla de bienvenida que muestre un mensaje de bienvenida al azar, escogido desde un array de mensajes.
 
@@ -193,7 +197,7 @@ Y el framework haría el trabajo de actualizar la información en la pantalla de
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-#### El array data
+### El array data
 
 El array data es un array que estará presente en todos los módulos. Siempre será público y es la fuente de información que utilizará el framework para desarrollar las maquetas. Más adelante veremos que hay muchas formas de expandir la funcionalidad de la maqueta pero por ahora concentrémonos en lo básico.
 
@@ -225,7 +229,7 @@ public $data =
 
 Entonces, esta información podría ser accedida desde la maqueta en cualquier momento. Por ejemplo, podríamos decir:
 
-#### Sintaxis de acceso a la información
+### Sintaxis de acceso a la información
 ```html
 <div><strong>{autos/0/marca}</strong> - {autos/0/modelo}</div>
 <div><strong>{autos/1/marca}</strong> - {autos/1/modelo}</div>
@@ -239,7 +243,7 @@ Esta es la forma más sencilla de utilizar la información de los módulos, pero
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-#### Utilización de intérpretes
+### Utilización de intérpretes
 
 Los intérpretes son fracciones de código destinadas a extender la funcionalidad del framework. Cada uno de ellos cumplirá con una función distinta y podrán ser declarados dentro de la maqueta para utilizarlos. Existen algunos intérpretes sencillos y otros más complejos. 
 
@@ -259,7 +263,7 @@ Para comenzar a entenderlos, explicaremos el uso del más sencillo de todos: **e
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-##### El intérprete if
+#### El intérprete if
 
 El intérprete if es una representación de la estructura if típica en cualquier lenguaje de programación. La gran diferencia es que éste no evalúa una expresión, como generalmente lo hacen los lenguajes, sino que solamente evalua una variable. Veámoslo con un ejemplo. Imaginemos que queremos mostrar un mensaje o no al usuario, dependiendo de si éste ha iniciado sesion. Para ello, estableceríamos la siguiente declaración en la maqueta:
 
@@ -293,7 +297,7 @@ La variable indicada en la especificación del intérprete, será falsa si se cu
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-##### El intérprete forrepeater
+#### El intérprete forrepeater
 
 Otro aspecto muy importante de los intérpretes, es la capacidad de generar estructuras repetitivas. El intérprete **forrepeater** recorrerá la variable especificada en el llamado al intérprete y generará una estructura de repeticiones basándose en la declaración del mismo. 
 
@@ -345,7 +349,7 @@ Si bien con esto logramos añadir un poco más de funcionalidad a nuestra maquet
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
-##### El intérprete foreach
+#### El intérprete foreach
 
 El intérprete foreach es el segundo de los repetidores. Su función es generar una estructura repetitiva, permitiendo el acceso a las diferentes propiedades de los objetos que queremos repetir. Retomemos el ejemplo de los autos para entenderlo:
 
@@ -532,9 +536,16 @@ Lograríamos un menú de navegación basado en listas completamente funcional. S
 
 El desarrollo de los módulos sigue un orden específico que permite definir reglas claras a la hora de escribir una maqueta compleja:
 
-1. **Se desarrolla la maqueta:** El proceso de desarrollo de la maqueta consiste en ubicar todos los intérpretes declarados y procesarlos. De esta forma, los repetidores desarrollan las sentencias correspondientes, el if decide qué datos van a estar presentes y cuáles no.
-2. **Se interpretan las variables:** Luego se buscan todas las variables dentro de la maqueta y se reemplazan por sus valores correspondientes. Es importante notar que solamente se podrán escribir en la maqueta variables que puedan ser transformadas a string. Si se declara una variable cuyo valor no puede ser transformado a string, resultará en un error.
-3. **Se incrustan los módulos:** Una vez que todas las variables fueron interpretadas, se llama a los módulos correspondientes, los que hayan quedado declarados en la maqueta.
+1. **Se desarrolla la maqueta:** El proceso de desarrollo de la maqueta consiste en ubicar todos los intérpretes declarados y procesarlos. De esta forma, los repetidores desarrollan las sentencias correspondientes, el if decide qué datos van a estar presentes y cuáles no. 
+	
+	El proceso de desarrollo realiza la búsqueda de intérpretes en forma descendente en el DOM. De esta
+forma se asegura que aquellos que sean declarados en un nivel superior se ejecuten primero, manteniendo una coherencia con las declaraciones.
+
+2. **Se interpretan las variables:** Luego se buscan todas las variables dentro de la maqueta y se reemplazan por sus valores correspondientes. Es importante notar que solamente se podrán escribir en la maqueta variables que puedan ser transformadas a string. Si se declara una variable cuyo valor no puede ser transformado a string, resultará en un error. 
+	
+	Por otro lado, las variables que se declaren en la maqueta pero no puedan ser ubicadas en el módulo, serán buscadas también en la configuración, de esta forma tenemos la posibilidad de incrustar valores de la configuración en la maqueta.
+
+3. **Se incrustan los módulos:** Una vez que todas las variables fueron interpretadas, se llama a los módulos correspondientes, los que hayan quedado declarados en la maqueta luego de los procesos anteriores y se los declara como hijos del módulo actual. Estos a su vez serán desarrollados de la misma forma que se explicó en este apartado generando una estructura de árbol entre módulos e hijos.
 
 ![Diagrama de desarrollo de los módulos](documentacion/diag-desarrollo-modulos.png)
 
@@ -553,18 +564,9 @@ Para una estructura de este tipo, el desarrollador tendría que generar un árbo
 
 ![Árbol de ficheros del ejemplo 1](documentacion/arbol-ejemplo-1.png)
 
-Una vez desarrollado el contenido de los distintos ficheros, solamente nos quedaría establecer el fichero de rutas. Si prestamos atención al contenido de main.html, éste carga un modulo de clase 'paginas/{pagina}'. Esto significa que antes de cargar el módulo, el framework reemplaza la variable página por su contenido en el array data. Si miramos ahora main.php, veremos que se le asigna el valor de Router::get('pagina'). Más adelante se explica en profundidad el uso del Router, pero por ahora, solamente colocaremos la siguiente entrada en el fichero **rutas.json** que se encuentra en /aplicacion/conf:
+Una vez desarrollado el contenido de los distintos ficheros, deberíamos obtener un sitio similar al siguiente:
 
-
-```json
-[
-	"pagina:ALPHA"
-]
-```
-
-Debemos asegurarnos de que reemplazamos todo el contenido del archivo rutas.json por esta entrada. Esto le indicaría al router que la cadena de texto que sigue a la uri de nuestra aplicación, la debe llamar **pagina**. Por ello, cuando desde main.php llamamos a Router::get('pagina'), este nos devuelve el contenido que deseamos. Luego de hecho esto, ya podemos ejecutar nuestra aplicación y debería estar perfectamente funcional. Aquí hay una vista previa de cómo debería quedar:
-
-![Diagrama de desarrollo de los módulos](documentacion/captura-galeria-fotos.png)
+![Captura de pantalla del ejemplo terminado](captura-galeria-fotos.png)
 
 El contenido de cada fichero es detallado a continuación, si bien puede parecer compleja la estructura sobre todo de los ficheros php, créeme que no lo es. Sobre todo considerando que el framework incorpora su propio [creador de módulos](#creación-de-módulos).
 
@@ -764,13 +766,96 @@ class Modulo
 
 [Volver arriba](#desarrollo-de-framework-spa)
 
+## Estructura de información
+
+Todo el framework se basa en una estructura de información representada por un árbol de módulos. Ya en la introducción hablamos sobre el módulo main, que sería la raíz del árbol a partir del cual se generan los demás y cómo a su vez éstos podían vincular otros. Siguiendo esta línea de razonamiento podríamos imaginar que la forma del árbol solamente depende de la forma de la aplicación y cómo éstas están estrechamente relacionadas. 
+
+De acuerdo a esto el servidor siempre guarda la información del árbol que se entregó al cliente por última vez. Cada vez que recibe una petición de parte de él, realiza el desarrollo de un nuevo árbol de acuerdo a esta petición y lo compara con ya entregado. En esta comparación realiza una lista de diferencias y una vez encontradas, busca qué módulos son necesarios para poder a partir de esta información volver a construir todo el árbol. De estos módulos que encuentra busca cuáles ya fueron entregados al cliente y hace una lista de los que no, carga sus maquetas y las agrega a la estructura. De esta forma la respuesta del servidor es siempre una estructura que contiene los módulos faltantes en el lado del cliente y las diferencias en el árbol de información que el cliente debe procesar para poder actualizar la pantalla.
+
+Aquí está el diagrama de la estructura de la respuesta: 
+
+![Respuesta del servidor](documentacion/diag-respuesta-servidor.png)
+
+### Coherencia entre cliente y servidor
+
+Esta estructura es la que realmente permite la coherencia entre ambos y para lograrlo hay algunos detalles importantes. Al no saber realmente en cada petición si el cliente ejecutará javascript o no, opté por retrasar la ejecución del módulo spa hasta que el mismo lo confirme. Para ello, en la primera petición que realiza un usuario a la aplicación (es decir, que carga una página), recibe además de la estructura de html válida una **semilla SPA**. Esto es, un pequeño fragmento de código que se ejecutará una vez que la página esté cargada avisando al servidor de que el módulo SPA puede ser ejecutado. En este momento el servidor hace entrega de la primera estructura de información, junto con los módulos que sean necesarios para su construcción.
+
+![Proceso de entrega de información en el primer volcado](documentacion/diag-primer-volcado.png)
+
+Una vez hecho esto, el cliente tendrá todas las herramientas para ejecutar el módulo SPA y así lo hará. A partir de la estructura recibida, reconstruirá el árbol de información presente en el servidor y desarrollará todos los módulos de la misma forma que lo hizo el servidor. Es decir, el cliente recorrerá el camino contrario a éste. Mientras el servidor lee los módulos, guarda el árbol de información y entrega al cliente la estructura representativa; el segundo recibe la estructura, la convierte en árbol y a partir de allí construye los módulos.
+
+Terminada la re-composición del árbol de módulos, se reemplaza el contenido del DOM en el navegador por el DOM dinámico generado por el módulo SPA. Siendo cierto que la primera carga es ligeramente más pesada que una carga común (no se puede afirmar que sea el doble, **ni mucho menos** ya que lo único que se carga dos veces es la información referente al DOM, no las imágenes ni estilos), esto permite una una experiencia de usuario fantástica ya que una vez que el módulo SPA esté activo, todas las cargas serán selectivas y dinámicas, dotando a la aplicación de un flujo muy agradable. 
+
+Para lograr esto, el módulo SPA intervendrá todas las peticiones que el usuario realice, ya sea mediante click en los enlaces o mediante submit en los formularios, solamente si éstos se refieren al dominio sobre el que está trabajando la aplicación (no se intervendrán enlaces externos) y si estos no tienen el atributo target='\_blank'. Realizará todas las peticiones de forma asíncrona mediante Ajax, agregando el query string '?spa' en la ruta de solicitud, informando de esta forma al servidor que el módulo SPA es quien realmente hace la llamada.
+
+El servidor sabiendo esto, utilizará la información que tiene guardada del volcado anterior, desarrollará la nueva ruta a la que el usuario desea acceder y encontrará todas las diferencias, volcando al cliente la estructura de **diferencias** y los módulos que éste aún no tenga para reconstruir las partes que difieran del árbol mantiene actualmente.
+
+![Proceso de entrega de información en los siguientes volcados](documentacion/diag-siguientes-volcados.png)
+
+[Volver arriba](#desarrollo-de-framework-spa)
+
 ## Componentes avanzados
 
 El framework incluye algunas funcionalidades más complejas que nos facilitan tareas muy importantes a la hora de crear una aplicación. Las más destacables son:
 
- - **Router:** El router ya fue mencionado en el ejemplo anterior y su funcionalidad es la de permitir el uso de URL's amigables tanto para el cliente y los buscadores como para los desarrolladores. Me refiero a esto particularmente porque muchas veces a la hora de desarrollar un sitio, el problema de generar URL amigables para toda la aplicación se vuelve complejo y tedioso. Este componente busca que esto resulte sencillo mediante la utilización de una hoja de rutas fácilmente configurable.
+ - **Router:** El router es el encargado de desglosar las rutas recibidas y disponer de dicha información para ser utilizada por otros componentes. Será el primer componente que actúe en el sistema ya que a partir de éste se desarrollarán las demás actividades. La forma en que compartirá la información será a través de métodos y propiedades públicas que podrán ser accedidas desde los demás componentes en todo momento. Además permitirá el cambio de ruta por parte de los otros componentes, esto será una ventaja especialmente en el proceso de logueo.
 
- - **Identificador:** El identificador es un componente que permite el manejo de sesiones de usuario de forma muy sencilla y segura, permitiendo su configuración para restringir de forma selectiva cualquier sector de la aplicación. Para ello admite la generación de reglas en un fichero
+ 	Su principal funcionalidad es la de permitir el uso de URL's amigables tanto para el cliente y los buscadores como para los desarrolladores. Me refiero a esto particularmente porque muchas veces a la hora de desarrollar un sitio, el problema de generar URL amigables para toda la aplicación se vuelve complejo y tedioso. Este componente busca que esto resulte sencillo mediante la utilización de una hoja de rutas fácilmente configurable.
+
+ - **Identificador:** El identificador maneja una estructura de identificación de usuario robusta que permite restringir de forma selectiva cualquier sector de la aplicación. Para ello admite la generación de reglas que se corresponden con las propiedades obtenidas en el proceso de routeo. De esta forma, podemos restringir cierta sección de la aplicación, alguna acción dentro de ésta o cualquier otra cosa que se nos ocurra en base a niveles de acceso.
+
+ - **Otros intérpretes:** El framework cuenta por el momento con dos intérpretes más además de los ya mensionados. Éstos son el **modulerepeater** y el **tablemaker**. El primero se utilizará en algunas situaciones particulares, en donde la estructura del forrepeater o del foreach pudieran complicar las cosas. El segundo toma un array de datos y lo convierte automáticamente en una tabla.
+
+### El router
+
+El router está inspirado en el modelo ofrecido en el libro **PHP MASTER: Write cutting-edge code** de Lorna Mitchell, Davey Shafik y Matthew Turland, sobre todo en la parte de interpretación de la hoja de rutas. Su objetivo es facilitar al desarrollador la construcción de una aplicación basada en rutas amigables, sin la necesidad de lidiar con la interpretación de las mismas. Para ello ofrece la posibilidad de editar un archivo de rutas que mantiene un formato similar al del libro mencionado. El api del Router es:
+
+#### Métodos públicos
+
+- run(): Método que ejecuta los procesos necesarios para el correcto funcionamiento del router, derivando en la interpretación de la ruta actual del sistema y la creación de los distintos array de propiedades públicas.
+
+- redirect(ruta): Método que siendo invocado antes del proceso de maquetación, permite redireccionar el flujo de la aplicación hacia una ruta distinta a la solicitada por el usuario. Fue pensado inicialmente para permitir redireccionar al usuario al sitio de ingreso de credenciales cuando fuese necesario. Podría ampliarse su funcionamiento para permitir la redirección de la aplicación luego de comenzado el proceso de maquetación, permitiendo que los módulos decidan también el flujo de la aplicación. 
+
+- get(propiedad): La gran ventaja del router es que permite asociar las rutas con propiedades bien definidas que adoptan el valor establecido en las mismas. Mediante una estructura de comparación que es la que el desarrollador define en la hoja de rutas, el router establece un array de propiedades nombradas con sus valores correspondientes según la ruta actual. Con el método get, podemos obtener estos valores o null en caso de que las propiedades no estén definidas.
+
+- current(): Devuelve la ruta actual en la que se encuentra el router.
+
+#### Propiedades públicas
+
+- $arrayRuta: es un array que contiene en la clave 0 el dominio actual y en cada siguiente elemento un directorio mas de la ruta.
+- $rutaActual: es un array asociativo que contiene el resultado del procesamiento de las rutas descritas en el fichero rutas.json.
+- $rutasProcesadas: es un array que contiene el historial de rutas que ha procesado el router en esta oportunidad.
+
+#### Configurando el router
+
+El router se configurará modificando el contenido de la hoja de rutas que se encuentra en el directorio /aplicacion/conf. Siendo que las rutas se basan en una estructura de directorios, el router también lo hará. Este fichero es un archivo json y el formato en que se modifique debe respetar las reglas del dicho formato. Para ser más claros, el fichero debe tener un formato idéntico al siguiente:
+
+```json
+[
+	"ruta1",
+	"ruta2",
+	"ruta3"
+]
+```
+
+**Si hubiese algún defecto en dicho formato, el router no podría funcionar.**
+
+El router siempre contrastará con la cadena de caracteres que siguen al dominio y ruta de la aplicación. Es decir, si la aplicación se encuentra dentro del dominio y rutas www.dominio.com/ruta, cuando el usuario acceda a la uri www.dominio.com/ruta/pagina/accion/item, el router contrastará las rutas con pagina/accion/item y devolverá el resultado más acertado. Además, procesará las rutas directorio por directorio, es decir, que las mismas se compondrán de distintas instrucciones separadas por una /. Y cada directorio mantiene una de las siguientes estructuras:
+
+- **cadena**: Es una cadena de caracteres que no representa ninguna variable y no es representada en el router. Si se ingresa este tipo de directorio, el router solamente busca si existe coincidencia con la ruta recibida pero no genera ningún tipo de información a partir de ella.
+
+- **variable:cadena**: Este tipo de instrucción, indica al router que en este directorio debe existir una cadena específica. Es utilizado cuando varias rutas coinciden en formato para diferenciarlas, ya que el router siempre dará prioridad a las rutas específicas por sobre las genéricas.
+
+- **variable:TIPO:** TIPO es una de las constantes definidas por el router: 
+ 
+	- **ALPHA:** => Contrasta con cualquier letra.
+	- **NUM:** => Contrasta con cualquier número.
+	- **ALPHANUM:** => Contrasta con cualquier número o letra.
+	- **ALL:** => Contrasta con cualquier caracter que no sea una /.
+	- **ETC:** => Contrasta con cualquier caracter, incluso una /. Este tipo se utiliza al final de las rutas para indicar que pueden contener otros caracteres no determinados.
+
+
+[Volver arriba](#desarrollo-de-framework-spa)
 
 ## Estructura del framework
 
@@ -834,15 +919,5 @@ En el directorio sistema están agrupados todos los componentes relacionados al 
 	- **sentenciarepeater:** Esta clase se declaró por la necesidad de generar una entidad capaz de trabajar dentro de la estructura de un repetidor (por ejemplo, el intérprete foreach). Esto es así ya que la propiedad de la que depende un repetidor, al modificarse produce cambios profundos en la maqueta. Tanto así que puede variar la cantidad de módulos introducidos dentro de ésta.
 	- **spa.js:** Es el fichero principal del sistema spa del cliente, además de concentrar las sentencias que importan la funcionalidad de los demás ficheros, es el encargado de proveer las funcionalidades necesarias para intervenir en las actividades del usuario, por ejemplo los clic, los submit de formularios o la navegación mediante los botones del historial. Interrumpe dichos eventos y los modifica de forma que las peticiones al servidor se hagan mediante ajax, procesa las respuestas y las entrega a la estructura de módulos para que sea actualizada en la pantalla del sistema.
 	- **spa.php:** Es una de las caras más importantes del sistema y el fichero alcanzado por los navegadores cuando se solicita el script *spa.js*, el cual en realidad nunca es cargado directamente ya que contiene instrucciones que no son propias del lenguaje javascript. La funcionalidad de **spa.php** es entonces la interpretación de estas instrucciones y el armado del documento spa.js final. Es una especie de micro-intérprete, su principal funcionalidad es la de permitir la división de tareas en javascript. Siendo que los script javascript no tienen una forma sencilla de *'incluir'* otros scripts, esta funcionalidad es agregada en el actual script. De esta forma, una sentencia del tipo **require 'modulo.js';** es interpretada por **spa.php** y reemplazada por el debido script. Otra funcionalidad que ofrece este script es la de modificar las instrucciones *clog* (abreviación de console.log, establecida en el fichero /scripts.js) para que en cualquier momento que un script decida utilizar dicho comando, en la consola indique qué fichero emitió este log y desde qué linea lo hizo.
-
-[Volver arriba](#desarrollo-de-framework-spa)
-
-## Componentes principales
-
-### Router
-
-El router es el encargado de desglosar las rutas recibidas y disponer de dicha información para ser utilizada por otros componentes. Será el primer componente que actúe en el sistema ya que a partir de éste se desarrollarán las demás actividades. La forma en que compartirá la información será a través de métodos y propiedades públicas que podrán ser accedidas desde los demás componentes en todo momento. Además permitirá el cambio de ruta por parte de los otros componentes, esto será una ventaja especialmente en el proceso de logueo.
-
-Se implementará a través de una clase estática que deberá ser inicializada mediante el método **Router::run()** al comenzar la ejecución del sistema. Su primera tarea será la de dividir la ruta en directorios y almacenarla en la propiedad pública **Router::$arrayRuta**. Luego procederá a leer la hoja de rutas, ubicada dentro del fichero rutas.json que se encuentra dentro del directorio del router.
 
 [Volver arriba](#desarrollo-de-framework-spa)

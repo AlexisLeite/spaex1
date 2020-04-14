@@ -186,9 +186,10 @@ class Ruta
 
 	private $tiposVariablesRutas = 
 	[
-		'ALPHA' => '\\w+',
+		'ALPHA' => '[a-zA-ZñÑ]+',
 		'NUM' => '\\d+',
-		'ALPHANUM' => '[\\w\\d]+',
+		'ALPHANUM' => '\\w+',
+		'ALL' => '[^\\/]+',
 		'ETC' => '.*'
 	];
 

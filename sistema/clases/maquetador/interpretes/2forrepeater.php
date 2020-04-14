@@ -6,7 +6,7 @@ class InterpreteForrepeater
 	public static function parse($valor,&$elemento,$data)
 	{
 		$key = $valor;
-		$valor = array_values(\Basic::getRoutedValue($data,$valor));
+		$valor =\Basic::getRoutedValue($data,$valor);
 		if($valor == null || !is_array($valor) || !sizeof($valor))
 		{
 			$elemento->remove();

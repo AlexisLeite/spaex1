@@ -23,7 +23,7 @@ class Modulo
 
 	public function __construct($args = [])
 	{
-		$seccion = \Router::get('seccion') ;
+		$seccion = \Router::get('pagina') ;
 		$this->data['pagina'] = $seccion ? $seccion : 'inicio';
 	}
 }

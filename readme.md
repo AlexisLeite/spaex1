@@ -41,6 +41,9 @@
 		1. [Guardado de las credenciales](#guardado-de-las-credenciales)
 		1. [El número de sesión](#el-numero-de-sesion)
 	1. [Intérpretes avanzados](#interpretes-avanzados)
+		1. [Tablemaker](#tablemaker)
+			1. [Falta el screen del tablemaker](#falta-el-screen-del-tablemaker)
+			1. [Definicion de estructura](#definicion-de-estructura)
 	1. [Debugger](#debugger)
 	1. [Comunicador](#comunicador)
 1. [Estructura del framework](#estructura-del-framework)
@@ -1093,6 +1096,265 @@ Su funcionamiento es muy sencillo pero no por eso menos efectivo: cuando un usua
 De esta forma, si cada vez que se actualizara la configuración del usuario (ya sea porque se cambió el nick, la foto de perfil, el correo electrónico o lo que fuere) se actualizara en conjunto el número de sesión, adicionando una unidad al mismo. El identificador tendría una buena fuente para saber si los datos que mantiene en sesión están actualizados, evitando consultar repetitivamente los mismos datos una y otra vez.
 
 ### Intérpretes avanzados
+
+#### Tablemaker
+
+El verdadero nombre de este intérprete es tablemaker, se deben respetar las mayúsculas y minúsculas, sobre todo por la ejecución en entornos Linux. El tablemaker es un intérprete utilizado para la generación automática de tablas a partir de un array multidimensional, permitiendo la configuración de la misma en varios aspectos y garantizando su actualización selectiva al modificarse los datos. 
+
+Mediante este intérprete, es posible insertar una tabla en la aplicación que se nutra de un array de información y se actualice automáticamente según los datos cambien. Lo interesante es que esta actualización no requerirá de modificaciones en el DOM, siempre y cuando se mantengan la cantidad de filas y columnas por supuesto, modificando únicamente el td donde se encuentre la información.
+
+Para utilizar el tablemaker, podríamos crear una maqueta como la siguiente:
+
+```html
+<nt tablemaker='tablaPersonas' />
+```
+
+```php
+<?php
+namespace personas\listado;
+
+define('ObjetoListado','objetoListado');
+
+class Modulo
+{
+	// No modificar
+	public $nombreModulo = 'Listado';
+	public $rutaModulo = 'personas/listado';
+
+	// Array de datos que utilizara el sistema para procesar la maqueta, debe ser escrito durante la construccion del modulo
+	public $data = 
+	[
+		'tablaPersonas' =>
+		[
+			[
+				'role' => 'thead',
+				'rows' =>
+				[
+					[
+						'nodes'=>
+						[
+							[
+								'th' => true,
+								'text' => '-'
+							],
+							[
+								'th' => true,
+								'text' => 'Modificar'
+							],
+							[
+								'th' => true,
+								'text' => 'Eliminar'
+							]
+						]
+					]
+				]
+			],
+			[
+				'role' => 'tbody',
+				'rows' =>
+				[
+				]
+			]
+		]
+	];
+
+	private $default =
+	[
+		'orden' => 'ci',
+		'ordenAsc' => 'asc',
+		'limite' => 30,
+		'pagina' => 0
+	];
+
+	private $columnas =
+	[
+		'ci', 'nombre', 'apellido', 'direccion', 'telefono', 'categoria'
+	];
+
+	public function __construct($args)
+	{
+		// Establecer la sesion
+		\Basic::sesion();
+		if(!isset($_SESSION[ObjetoListado]))
+			$_SESSION[ObjetoListado] = [];
+
+		// Resultados por pagina
+		$limitePorPagina = 10; 
+
+		// Establecer pagina actual
+		$pagina = \Router::get('nroPagina') 
+					? \Router::get('nroPagina') 
+					: (isset($_POST['getPage'])
+							? $_POST['getPage']
+							: 1);
+
+		// Establecer columna por la cual ordenar
+		$orden = 'ci';
+		$orden = \Router::get('ordenar') 
+					? \Router::get('columna') 
+					:	(isset($_SESSION[ObjetoListado]['orden']) 
+								? $_SESSION[ObjetoListado]['orden'] 
+								: $orden);
+
+		// Establecer orden
+		$ascDesc = 'asc';
+		$ascDesc = \Router::get('ascDesc')
+					? \Router::get('ascDesc')
+					: (isset($_SESSION[ObjetoListado]['ascDesc'])
+								? $_SESSION[ObjetoListado]['ascDesc']
+								:$ascDesc);
+
+		// Establecer la cabecera de la tabla de listado
+		foreach(array_reverse($this->columnas) as $col)
+		{
+			$ascDescCol = $orden == $col ? ($ascDesc == 'asc' ? 'desc' : 'asc') : 'asc';
+			array_splice($this->data['tablaPersonas'][0]['rows'][0]['nodes'], 1, 0,
+				[[
+					'mode' => 'href',
+					'href' => "{uri/base}/personas/listado/ordenar/$col/$ascDescCol",
+					'title' => "Ordenar resultados por $col",
+					'th' => true, 
+					'text' => ucfirst($col)
+				]]);
+		}
+
+		// Establecer enlaces de orden de columnas
+		foreach($this->columnas as $col)
+			$this->data["{$col}Asc"] = 'asc';
+		$this->data["{$orden}Asc"] = $ascDesc == 'asc' ? 'desc' : 'asc';
+	
+		// Se guardan los datos en sesion
+		$_SESSION[ObjetoListado]['orden'] = $orden;
+		$_SESSION[ObjetoListado]['ascDesc'] = $ascDesc;
+
+
+		// Generar resultados para mostrar
+
+		// Objeto de estadisticas:
+		// 'registros': Cantidad de registros
+		// 'ultimaPagina': Cantidad de elementos que muestra la ultima pagina
+		// 'paginas': Cantidad de paginas (se debe sumar 1 si ultimaPagina != 0)
+		$estadisticas = \Comunicador::getEstadisticas(['limite' => $limitePorPagina]);
+		$this->data['resultadosTotal'] = $estadisticas['registros'];
+		$this->data['paginasTotal'] = ($estadisticas['ultimaPagina'] == 0) ? $estadisticas['paginas'] : $estadisticas['paginas'] + 1;
+
+		// Se traen los resultados desde la base de datos
+		$personas = \Comunicador::getPersonas(array_merge($_SESSION[ObjetoListado],['pagina' => $pagina - 1, 'limite' => $limitePorPagina]));
+
+		// Establecer pagina anterior, actual y siguiente
+		$this->data['paginaActual'] = $pagina;
+		$this->data['paginaAnterior'] = $pagina > 1 ? $pagina-1 : 1;
+		$this->data['paginaSiguiente'] = $pagina + 1 > $this->data['paginasTotal'] ? $pagina : $pagina+1;
+
+
+		// Agregar informacion a la tabla
+		foreach($personas as $persona)
+		{
+			$nuevoArray = 
+			[
+				'-',
+				[
+					'mode' => 'href',
+					'href' => "{uri/base}/personas/modificar/{$persona['ci']}",
+					'text' => 'Modificar',
+					'title' => "Modificar {$persona['nombre']} {$persona['apellido']}."
+				],
+				[
+					'mode' => 'href',
+					'href' => "{uri/base}/personas/eliminar/{$persona['ci']}",
+					'text' => 'Eliminar',
+					'title' => "Eliminar {$persona['nombre']} {$persona['apellido']}."
+				]
+			];
+
+			foreach(array_reverse($this->columnas) as $col)
+				array_splice($nuevoArray,1,0,isset($persona["{$col}Highlighted"]) ? $persona["{$col}Highlighted"] : $persona[$col]);
+
+			$this->data['tablaPersonas'][1]['rows'][] = $nuevoArray;
+		}
+	}
+}
+
+?>
+```
+
+Este script está recortado de una aplicación en la que estoy trabajando, encargada del gestionamiento de los recursos humanos de una empresa. Es en realidad un fragmento del script ya que omití la parte de búsqueda, pero con este fragmento y los métodos getPersonas y getEstadisticas programados en el Comunicador sería suficiente para hacerla funcionar. Aquí una captura del resultado:
+
+##### Falta el screen del tablemaker
+
+##### Definicion de estructura
+
+###### La estructura pasada al tablemaker debe ser:
+
+- [thead, tbody, tfoot], //no siendo necesario incluir los 3 roles.
+- [row1, row2, ...] //siendo *cada* nodo la definicion de un row
+
+Al establecer la estructura de una tabla, la definicion puede hacerse con cualquiera de estas estructuras pero **no con una mezcla de ellas**. Esto es: 
+
+- **Si se establecen roles**, todos los nodos primarios del array de la tabla deben ser roles. 
+- **Si no se establecen roles**, todos los nodos primarios son rows que iran dentro del rol de tbody.
+
+Si se pasara un array con nodos primarios roles y nodos primarios row, esto derivaria en un [Error](http://papascom/).
+
+- Se debe tener cuidado que al modificar los datos de la tabla, **se debe respetar el modo en el que se genero la misma**. Es decir, si se crea una tabla a partir de una estructura array que define roles, los cambios a dicha tabla deben ser siempre respetando que la misma **tenga** roles. Se pueden *eliminar* roles, pero no se puede establecer el array como array de rows.
+
+- Por el contrario, si la tabla empezo en modo row, no se puede luego cambiar la tabla para que contenga una estructura de tipo roles. 
+
+**Ambas operaciones terminaran siempre en un error**
+
+###### Definicion de roles:
+Para definir los roles de thead, tbody o tfoot, se debera pasar un array por cada rol que se desee definir, con la siguiente estructura:
+###### La estructura para definir los roles sera:
+
+```js
+[  
+role: thead | tbody | tfoot,  
+rows: [array de rows]  
+id:
+style:
+class:
+]
+````
+
+###### Definicion de rows:
+Los rows pueden ser definidos por:
+- Array asociativo que establezca propiedades del row.
+- Array de celdas.
+
+###### La estructura para definir las propiedades del row sera:
+
+```js
+[
+id,
+class,
+style,
+nodes: [array de nodes]
+]
+```
+
+###### Definicion de node:
+Los nodes seran las celdas de la tabla. Los mismos pueden ser definidos bien por un array asociativo que establezca sus propiedades o por un string, que sera el valor que se mostrara en la tabla.
+
+###### La estructura para definir las propiedades del node sera:
+
+```js
+[
+mode: href | value (mas adelante se crearan mas modes),
+	Si href:
+		href: url del enlace,
+		title: titulo del enlace,
+		text: texto a mostrar
+
+	Si value
+		text: Texto a mostrar
+
+th: true | false, establece si el nodo es de tipo th o td
+colspan: #, establece el colspan del nodo
+style,
+id,
+class
+]
+```
 
 ### Debugger
 

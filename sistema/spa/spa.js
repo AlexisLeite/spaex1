@@ -87,6 +87,7 @@ $(document).ready(()=>
 			try
 			{
 				respuesta = JSON.parse(respuesta);
+				clog(respuesta);
 			}
 			catch(e)
 			{
@@ -99,7 +100,6 @@ $(document).ready(()=>
 				modulos = modulos.concat(Object.values(respuesta.modulos));
 				delete respuesta['modulos'];
 			}
-			clog(modulos);
 			if(moduloRaiz == null)
 			{
 				let loader = $('#Loader').detach();

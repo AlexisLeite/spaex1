@@ -1,6 +1,7 @@
 <?php
 require('configure.php');
 
+
 // El plantar la semilla no deberia modificar ninguna variable de entorno, lo mejor seria que el maquetador trabaje y luego se termine el script
 if(isset($_GET['activarSpa'])) Maquetador::run();
 

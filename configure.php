@@ -1,11 +1,14 @@
 <?php
+require_once(__DIR__ . '/sistema/clases/conf/conf.php');
+Conf::run();
+
 // Esta variable debe ser configurada si su aplicacion se encuentra en un subdirectorio del host, ejemplo: localhost/aplicacion
 // $pathPrefix = '/aplicacion';
-$pathPrefix = '/spaex1/';
+$pathPrefix = conf('pathPrefix');
 // Esta variable permite establecer un array de los nombres de dominios permitidos por la aplicación
-$hostPermitidos = ['localhost'];
+$hostPermitidos = conf('hostPermitidos');
 // Esta variable permite establecer si el gestor estara disponible para ser utilizado, se recomienda deshabilitar esta configuracion una vez que se haya terminado de configurar el servidor.
-$habilitarGestor = true;
+$habilitarGestor = conf('habilitarGestor');
 
 if($pathPrefix[strlen($pathPrefix)-1] == '/') $pathPrefix = substr($pathPrefix, 0, strlen($pathPrefix)-1);
 
@@ -25,8 +28,6 @@ if(!in_array($hostName, $hostPermitidos)) {
 }
 
 $baseUri = "$protocolo$hostName$pathPrefix";
-
-require_once(__DIR__ . '/sistema/clases/conf/conf.php');
 
 Conf::set('rutaApp',__DIR__);
 Conf::set('uri/base',$baseUri);

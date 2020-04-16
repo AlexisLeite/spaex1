@@ -11,6 +11,11 @@ class Closer
 class Comunicador
 {
 	private static $conn;
+	private static $host = 'localhost';
+	private static $user = 'Alexis';
+	private static $pass = 'Alexis';
+	private static $bdUsuarios = 'usuarios',
+
 	private static $queries;
 	private static $qUserPass;
 	private static $qUserClave;
@@ -48,104 +53,15 @@ class Comunicador
 		if(in_array($accion, ['autenticar','corroborarNumeroSesion','autenticarGuardado','logout']))
 			$respuesta =  Self::atenderIdentificador($accion,$argumentos);
 
-		if(in_array($accion, ['buscarPersonas','eliminarPersona','agregarPersona','getEstadisticas','getPersonas','getPersona','modificarPersona']))
-		{
-			$respuesta =  Self::atenderPersonas($accion,$argumentos);
-		}
-
 		$_SESSION['comunicador']['respuesta'] = print_r($respuesta,true);
 		return $respuesta;
-	}
-
-	private static function atenderPersonas($accion,$argumentos)
-	{
-		if(isset($argumentos[0]))
-			$argumentos = $argumentos[0];
-
-		$orden = isset($argumentos['orden']) ? $argumentos['orden'] : 'ci';
-		$ordenAsc = isset($argumentos['ascDesc']) ? $argumentos['ascDesc'] : 'asc';
-		$limitCuantos = isset($argumentos['limite']) ? $argumentos['limite'] : 30;
-		$offset = isset($argumentos['pagina']) ? $argumentos['pagina'] * $limitCuantos : 0;
-
-		switch($accion)
-		{
-			case 'agregarPersona':
-				$res = Self::query("insert into personas (ci,nombre,apellido,direccion,telefono) values ('{$argumentos['ci']}','{$argumentos['nombre']}','{$argumentos['apellido']}','{$argumentos['direccion']}','{$argumentos['telefono']}')");
-
-				if($res)
-					return true;
-				else
-				{
-					$res = Self::query("select ci from personas where ci='{$argumentos['ci']}'");
-
-					if($res->num_rows)
-						return 'Ya existe una persona con ese numero de cedula.';
-
-					return Self::db()->error;
-				}
-
-			case 'buscarPersonas':
-
-				if((int) $argumentos)
-					$res = Self::query("(SELECT personas.ci, personas.nombre, personas.apellido, personas.direccion, personas.telefono ,categorias.nombre as categoria FROM `personas`,categorias WHERE ci like ('{$argumentos}%') and personas.categoria = categorias.numero
-
-						union 
-
-						SELECT personas.ci, personas.nombre, personas.apellido, personas.direccion, personas.telefono ,categorias.nombre as categoria FROM `personas`,categorias WHERE concat(ci, ' ', telefono) like ('%{$argumentos}%') and personas.categoria = categorias.numero)
-						 limit 40");
-				else
-					$res = Self::query("SELECT personas.ci, personas.nombre, personas.apellido, personas.direccion, personas.telefono ,categorias.nombre as categoria FROM `personas`,categorias WHERE (match (personas.nombre,apellido,direccion,telefono) against ('{$argumentos}*' in BOOLEAN MODE) or concat(personas.nombre,' ',apellido,' ',direccion,' ',telefono) like replace('%{$argumentos}%',' ','%')) and personas.categoria = categorias.numero order by match (personas.nombre,apellido,direccion,telefono) against ('{$argumentos}*' in BOOLEAN MODE) desc limit 40");
-
-				if($res)
-					return $res->fetch_all(MYSQLI_ASSOC);
-				else
-					return Self::db()->error;
-
-			case 'eliminarPersona':
-				$res = Self::query("delete from personas where ci in ('{$argumentos}')");
-				if($res)
-					return true;
-				else
-					return Self::db()->error;
-
-			case 'getEstadisticas':
-				$res = Self::query("select count(ci) as registros, count(ci) div $limitCuantos as paginas, count(ci) % $limitCuantos as ultimaPagina from personas");
-				if($res)
-					return $res->fetch_assoc();
-				else
-					return $Self::db()->error();
-
-			case 'getPersonas':
-				if($orden == 'categoria') $orden = 'categorias.nombre';
-				$res = Self::query("select personas.*, categorias.nombre as categoria from personas,categorias where personas.categoria = categorias.numero order by $orden $ordenAsc limit $offset,$limitCuantos");
-
-				if($res)
-					return $res->fetch_all(MYSQLI_ASSOC);
-				else
-					return Self::db()->error;
-
-			case 'getPersona':
-				$res = Self::query("select personas.* from personas where ci='{$argumentos}'");
-				if($res)
-					return $res->fetch_assoc();
-				else
-					return Self::db()->error;
-
-			case 'modificarPersona':
-				$res = Self::query("update personas set nombre = '{$argumentos['nombre']}', apellido='{$argumentos['apellido']}', telefono='{$argumentos['telefono']}', direccion='{$argumentos['direccion']}' where ci='{$argumentos['ci']}'");
-
-				if($res)
-					deb('Resultadoquery',print_r($res,true));
-				else
-					deb('Resultadoquery',print_r(Self::db(),true));
-		}
 	}
 
 	private static function prepareQueries()
 	{
 		// Queries del identificador
-		Self::$qUserPass = Self::$conn->prepare("select personas.*, usuarios.nroSesion from personas,usuarios where personas.ci=usuarios.ci and usuarios.usuario=? and usuarios.password=?");
-		Self::$qUserClave = Self::$conn->prepare("select personas.*, usuarios.nroSesion from personas,usuarios,claves_aleatorias where personas.ci=usuarios.ci and personas.ci=claves_aleatorias.ci and usuarios.usuario=? and claves_aleatorias.clave=?");
+		Self::$qUserPass = Self::$conn->prepare("select usuarios.* usuarios where usuarios.usuario=? and usuarios.password=?");
+		Self::$qUserClave = Self::$conn->prepare("select usuarios.* from usuarios,claves_aleatorias where usuarios.id=claves_aleatorias.usuario and usuarios.usuario=? and claves_aleatorias.clave=?");
 
 		Self::$qUserPass->bind_param('ss', Self::$qUser, Self::$qPass);
 		Self::$qUserClave->bind_param('ss', Self::$qUser, Self::$qPass);
@@ -155,7 +71,7 @@ class Comunicador
 	{
 		if(Self::$conn) return;
 
-		Self::$conn = new mysqli('localhost','Alexis','Alexis','rrhh');
+		Self::$conn = new mysqli(Self::$host,Self::$user,Self::$pass,Self::$bdUsuarios);
 
 		Self::prepareQueries();
 	}
@@ -201,7 +117,7 @@ class Comunicador
 					for($i=0; $i<20; $i++)
 						$password .= substr($str,rand(0,strlen($str)),1);
 
-					$res = Self::query("insert into claves_aleatorias (ci,clave) values ('{$respuesta['usuario']['ci']}','{$password}')");
+					$res = Self::query("insert into claves_aleatorias (usuario,clave) values ('{$respuesta['usuario']['id']}','{$password}')");
 				}
 
 				if(isset($password))
@@ -225,7 +141,7 @@ class Comunicador
 				break;
 
 			case 'logout':
-				Self::query("DELETE claves_aleatorias from claves_aleatorias left join usuarios on claves_aleatorias.ci = usuarios.ci where claves_aleatorias.clave='{$argumentos['claveAleatoria']}' and usuarios.usuario='{$argumentos['user']}'");
+				Self::query("DELETE claves_aleatorias from claves_aleatorias left join usuarios on claves_aleatorias.usuario = usuarios.id where claves_aleatorias.clave='{$argumentos['claveAleatoria']}' and usuarios.usuario='{$argumentos['user']}'");
 				return true;
 		}
 
@@ -233,15 +149,15 @@ class Comunicador
 	}
 	private static function fetchAnswer($usuario)
 	{
+		$datosUsuario = [];
+		foreach(conf('datosUsuario') as $dato)
+			if(isset($usuario[$dato])) $datosUsuario[$dato] = $usuario[$dato];
+
 		return [
 			'estado' => 1,
 			'usuario'=> 
 			[	
-				'ci' => $usuario['ci'],
-				'nombre' => $usuario['nombre'],
-				'apellido' => $usuario['apellido'],
-				'telefono' => $usuario['telefono'],
-				'direccion' => $usuario['direccion']
+				'usuario' => $datosUsuario
 			],
 			'nroSesion'=> $usuario['nroSesion'],
 			'categoria'=> $usuario['categoria']

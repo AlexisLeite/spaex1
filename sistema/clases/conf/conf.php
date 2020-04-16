@@ -10,7 +10,7 @@ class Conf
 	private static function load()
 	{
 		if(!Self::$conf)
-			Self::$conf = json_decode(file_get_contents(__DIR__ . '/../../../aplicacion/conf/conf.json'),true);
+			Self::$conf = Jsoner::load(__DIR__ . '/../../../aplicacion/conf/conf.json',true);
 	}
 
 	public static function run()

@@ -1,4 +1,5 @@
 {
+	// Rutas del sistema
 	"ruta":
 	{
 		"clases": "{rutaApp}/sistema/clases",
@@ -15,6 +16,18 @@
 		"base": "",
 		"common": "{uri/base}/sistema/external"
 	},
+
+	// Configuracion de la aplicacion
 	"moduloRaiz": "main",
-	"maquetaRaiz": "general.html"
+	"maquetaRaiz": "general.html",
+	"habilitarGestor": true,
+
+	// Configuracion del servidor
+	"pathPrefix": "/spaex1",
+	"hostPermitidos": ["localhost"],
+
+	// Configuracion del identificador
+	"rangoPredeterminado": 100,
+	// Claves que se obtendrán de la tabla de usuarios para colocar a disposición de la aplicación (columnas de la tabla)
+	"datosUsuario": ["usuario"]
 }

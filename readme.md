@@ -31,7 +31,15 @@
 		1. [Propiedades públicas](#propiedades-publicas)
 		1. [Configurando el router](#configurando-el-router)
 		1. [Método de selección de ruta](#metodo-de-seleccion-de-ruta)
+			1. [Ejemplo](#ejemplo)
 	1. [Identificador](#identificador)
+		1. [Configuración de ejemplo](#configuracion-de-ejemplo)
+		1. [Interfaz del identificador](#interfaz-del-identificador)
+			1. [Interfaz con el servidor](#interfaz-con-el-servidor)
+			1. [Interfaz con la aplicación](#interfaz-con-la-aplicacion)
+		1. [Procedimientos del identificador](#procedimientos-del-identificador)
+		1. [Guardado de las credenciales](#guardado-de-las-credenciales)
+		1. [El número de sesión](#el-numero-de-sesion)
 	1. [Intérpretes avanzados](#interpretes-avanzados)
 	1. [Debugger](#debugger)
 	1. [Comunicador](#comunicador)
@@ -74,28 +82,24 @@ Cualquier persona que quisiera utilizar este framework, debería comenzar entend
 
 ### Configuración del framework, ultrasencilla!
 
-La configuración del framework se realiza dentro del fichero **configure.php** que se encuentra en la raíz del sistema. Para ello debemos realizar las modificaciones:
+La configuración del framework se realiza dentro del fichero **conf.json** que se encuentra en **/aplicacion/conf**. Para ello debemos realizar las modificaciones:
 
 Si el framework está alojado dentro de una ruta dentro de su dominio, entonces debe ser establecida en la variable **$pathPrefix**. Por ejemplo, en la siguiente declaración, el framework intentará trabajar en www.dominio.com/spaex1.
 
-```php
-// Esta variable debe ser configurada si su aplicacion se encuentra en un subdirectorio del host, ejemplo: localhost/aplicacion
-// $pathPrefix = '/aplicacion';
-$pathPrefix = '/spaex1/';
+```json
+pathPrefix: "/spaex1/"
 ```
 
 Además, se debe establecer una lista de dominios permitidos por la aplicación. Esto es un array que contenga una lista de todos los dominios que serán aceptados. Si la aplicación recibe una solicitud desde un dominio que no se encuentra en las siguiente lista, devolverá el encabezado 400: Bad request de HTTP y terminará.
 
-```php
-// Esta variable permite establecer un array de los nombres de dominios permitidos por la aplicación
-$hostPermitidos = ['www.dominio.com'];
+```json
+hostPermitidos: ["www.dominio.com"]
 ```
 
-Con la variable $habilitarGestor se establece cuando la aplicación debe permitir el acceso al gestor de módulos o no. Ver [creador de módulos](#creación-de-módulos).
+Con la variable habilitarGestor se establece cuando la aplicación debe permitir el acceso al gestor de módulos o no. Ver [creador de módulos](#creación-de-módulos).
 
-```php
-// Esta variable permite establecer si el gestor estara disponible para ser utilizado, se recomienda deshabilitar esta configuracion una vez que se haya terminado de configurar el servidor.
-$habilitarGestor = true;
+```json
+habilitarGestor: true
 ```
 
 **Importante:** Para que la variable $habilitarGestor surta efecto, deben cumplirse dos condiciones:
@@ -913,9 +917,180 @@ Siendo relativamente sencillo, el router es muy poderoso y otorga muchas posibil
 
 **Aclaración:** El anterior diagrama hace referencia a nivel actual. Esto es así ya que el router fracciona la ruta en directorios y les llama niveles. Siendo el primer directorio el nivel 0, el segundo el nivel 1 y así sucesivamente.
 
+Para que quede claro: el router primero que nada separará todas las rutas que pudieran coincidir con la ruta actual. Buscará entre todas ellas, cuáles tienen por primer directorio un directorio específico (es decir, de tipo **variable:cadena**). Si las hay, eliminará de la lista todas las que tengan en el primer directorio un directorio no específico. Si queda una sola ruta luego de esto, la usa. Si quedan varias rutas, buscará cuáles tienen un siguiente directorio. Si no hay ninguna que tenga un siguiente directorio, utilizará de entre ellas, la que se haya declarado más abajo en el archivo de rutas. Si hay alguna que tenga un siguiente directorio, descartará todas las que no tengan un siguiente directorio y repetirá el proceso con las restantes.
+
+Dicho de otra manera: se priorizará aquellas rutas que tengan directorios específicos más hacia la base de la ruta. Se priorizará también las rutas que siendo similares en sus características de especificidad, sean más largas que las demás.
+
+##### Ejemplo
+
+Si una ruta coincide con las siguientes entradas de la hoja de rutas:
+
+	pagina=ALPHA/accion=detalle/id=15
+	pagina=ALPHA/metodo=ALPHA/etc=ETC
+	pagina=usuarios/accion=ALPHA/id=NUM
+
+Se seleccionará la tercera, por tener el primer directorio específico frente a las otras dos que no lo tienen, a pesar de que la primera tiene más directorios específicos que la tercera.
+
+Si coinciden las siguientes entradas:
+
+	pagina=ALPHA/accion=detalle/id=NUM/ordenar=ALPHA
+	seccion=ALPHA/modificar=detalle/contador=NUM
+
+Se seleccionará la primera, por tener igualdad de especificidad con la segunda, pero ser más larga.
+
 [Volver arriba](#desarrollo-de-framework-spa)
 
 ### Identificador
+
+El identificador es un componente poderoso del framework encargado del proceso de autenticación y restricción de acceso a las distintas áreas de la aplicación. Se basa para ello en el archivo *requisitos.json* ubicado en */aplicacion/conf*.
+
+La forma en la que determina cuándo debe restringir o permitir el acceso a un área de la aplicación es sencilla: el usuario que está utilizando la aplicación tiene asignada una categoría numérica, ya sea que haya iniciado sesión o no. Por defecto, cuando el usuario aún no ha iniciado sesión se le asigna la categoría 100. Esto se puede modificar en el archivo de configuraciones, ubicado en */aplicacion/conf/conf.json*, modificando la propiedad "rangoPredeterminado". Cuando éste ingrese a cualquier área de la aplicación, el identificador buscará dentro del fichero *requisitos.json* para ver si existe alguna regla que coincida con el área a la que está entrando. Si existe, verificará que la categoría del usuario sea igual o menor a la requerida por esa sección. Si es mayor, lo redireccionará a la página de login.
+
+Por defecto el framework trae un módulo de login que se encuentra en /aplicacion/modulos/paginas/login. Por el momento, no se incorpora un módulo de registro, aunque esto puede cambiar en el futuro.
+
+La forma en la que determina cuál es el requisito para un área específica es también relativamente sencilla: el archivo *requisitos.json* está compuesto por un array de estructuras. Cada una de estas estructuras representa una regla específica y a su vez está compuesta de los siguientes índices:
+
+ - **claves:** Es un array asociativo que indica **qué claves de la ruta actual deben tener qué valores** para que se aplique la restricción.
+ - **restriccion:** Es el nivel de categoría que será necesario para continuar cuando **TODAS las claves coincidan** y esta sea la entrada más abarcativa de todas (**la que más claves coincidan**). **Importante:** Si dos entradas coinciden, pero una tiene definidas más claves que la otra, será aplicada sin importar cuál de las dos tenga un nivel de exigencia mayor en su restricción.
+
+Para que quede más claro: cuando el usuario entra en una ruta, el router arroja una serie de propiedades con nombre y valor. Estas propiedades son tomadas por el identificador y contrastadas con el fichero de requisitos. Si existe alguna entrada en el fichero cuyas claves estén todas presentes en el router y sus valores coincidan con los valores del router, entonces verificará si la categoría del usuario es menor o igual a la categoría de restricción establecida en la regla. Si es menor o igual, permite que el usuario continúe sin intervenir. Si la categoría del usuario es mayor que la establecida en la entrada del fichero de requisitos, redireccionará al usuario a la página www.dominio.com/ruta/login. Con las configuraciones por defecto del framework esto conducirá al módulo de login que acompaña al framework. Una vez que el usuario haya iniciado sesión, volverá a redirigirlo si la categoría acreditada lo permite, al sitio a donde quería ir desde el principio. Cuando el usuario quisiera modificar estas entradas, debería repetir la estructura dentro del fichero para cada regla que quisiera establecer. 
+
+#### Configuración de ejemplo
+
+**Con esta configuración**:
+
+- Sólo los administradores pueden acceder al gestor del framework
+- Sólo los moderadores pueden entrar a la gestión de contenido
+- Sólo los moderadores avanzados pueden eliminar contenido
+- Sólo los usuarios registrados pueden opinar
+- El resto de las acciones son libres para todos los usuarios
+
+```javascript
+[
+	// Restricción general, categoría 100 es el usuario no registrado. Permitir el acceso a todos
+	{
+		"claves":{},
+		"restriccion":100
+	},
+
+	// Restricción para acceder al gestor, categoría 1 es la categoría más restrictiva de todas, debería identificar a los administradores del sistema.
+	{
+		"claves":
+		{
+			"gestorFramework": "gestor"
+		},
+		"restriccion":1
+	}
+
+	// Restricción media para acceder a la gestión de contenido. Debería ser aplicada para los moderadores
+	{
+		"claves":
+		{
+				"pagina": "gestion"
+		},
+		"restriccion":50
+	}
+
+	// Restricción fuerte para eliminar contenido. Debería ser aplicada para los moderadores más avanzados
+	{
+		"claves":
+		{
+				"pagina": "gestion",
+				"accion": "eliminar"
+		},
+		"restriccion":40
+	}
+
+	// Restricción leve para opinar en cualquier categoría. Sólo los usuarios registrados pueden opinar
+	{
+		"claves":
+		{
+				"accion": "opinar"
+		},
+		"restriccion":99
+	}
+]
+```
+
+Además, el módulo login puede ser reemplazado por el usuario como guste, siempre y cuando respete la interfaz del identificador.
+
+#### Interfaz del identificador
+
+El identificador sólamente buscará intentos de inicio de sesión cuando esté establecida la propiedad del router "seccion" = "login".
+
+El identificador cerrará la sesión de usuario cuando esté establecida la propiedad del router "seccion" = "logout".
+
+El identificador recibirá los intentos de inicio de sesión a través de las variables $\_POST['User'] y  $\_POST['Pass']. Además, verificará si existe y puede ser evaluada como verdadero la variable $\_POST['Recordar'] para recordar las credenciales del usuario incluso después de que haya cerrado el navegador.
+
+Todas las comunicaciones para autenticar las credenciales recibidas ó guardadas se realizarán mediante el componente [Comunicador](#comunicador), llamando al método Comunicador::autenticar(['credenciales','recordar']).
+
+- **credenciales:** es un array asociativo compuesto o bien por 'user' y 'pass' o bien por 'user' y 'claveAleatoria' (se explica más adelante).
+- **recordar:** es true para indicar al servidor que se guardarán los datos del usuario y por lo tanto debe devolver una clave aleatoria (se explica más adelante).
+
+La respuesta del servidor siempre será un array asociativo que contenga las siguientes claves:
+
+- **estado:** Podrá valer 1, indicando que el proceso fue exitoso ó 0, indicando que hubo algún problema.
+- Si el estado es 0, **motivo:** Será una cadena de texto indicando el motivo por el cual no se pudo iniciar sesión.
+- Si el estado es 1:
+	- **usuario:** será un array asociativo que contendrá información sobre el usuario, será mostrada al resto del sistema como fuente de información sobre el mismo. Aquí se deberían incluir: nombre de usuario, género, foto de perfil, notificaciones. Se puede incluir cualquier información que sea relevante para la aplicación. Este array será accedido más tarde por la aplicación a través de las variables de sesión del identificador.
+	- **nroSesion:** Se utilizará para corroborar que los datos del usuario se mantienen actualizados durante la sesión del usuario.
+	- **categoria:** Es la categoría de usuario, que se utilizará para contrastar con las reglas de acceso a la aplicación explicadas previamente.
+	- **claveAleatoria:** Esta clave será proporcionada por el servidor y se guardará en los cookies del usuario, evitando de esta forma la necesidad de almacenar el verdadero password.
+
+##### Interfaz con el servidor
+
+| Consulta                                               | Respuesta recibida                                                                                                                                                     |
+|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| autenticar(credenciales[user, pass], recordar)         |  [estado=0, motivo='Motivo para no autenticar'], [estado=1, nroSesion='##', categoria='##', usuario=[nombreUsuario, fotoPerfil, genero, etc], ¿claveAleatoria?]        |
+| autenticarGuardado(credenciales[user, claveAleatoria]) | Idéntico que el anterior.                                                                                                                                              |
+| corroborarNumeroSesion(credenciales, nroSesion)        |  [estado=2 (sesión desactualizada), nroSesion, usuario[array de datos de usuario idem. autenticar]], [estado=1] (sesión correcta), [estado=0, motivo='Error ocurrido'] |
+
+##### Interfaz con la aplicación
+
+La interfaz con la aplicación se da a través de las variables super-globales $\_SESSION, $\_POST ó $\_COOKIE. De esta forma se obtiene y proporciona toda la información necesaria para el proceso de autenticación y obtenida a partir del mismo.
+
+Aquí una lista de estas propiedades:
+
+| Variable                                               | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| $\_SESSION['identificador']                            | Objeto que contiene almacenada toda la interfaz del identificador.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| $\_SESSION['identificador']['redireccionar']           |  Objeto que se crea cuando se fuerza un redireccionamiento. En él se establece:    - **motivo:** string que describe el motivo del redireccionamiento.  - **urlFinal:** Url hacia la que se dirgía el usuario cuando se forzó el redireccionamiento.                                                                                                                                                                                                                                                                                                                               |
+| $\_SESSION['identificador']['credenciales']            |  Objecto que contiene las credenciales guardadas para interactuar con el servidor, puede ser una combinación de:  - user y pass.  - user y claveAleatoria.                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| $\_SESSION['identificador']['errorAutenticacion']      | Objeto creado para almacenar los resultados de una autenticación fallida.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| $\_SESSION['identificador']['sesionActual']            | Objecto creado depositar la información recibida desde el servidor de modo que esté disponible para su utilización en la aplicación. El identificador no interactúa con el contenido de éste. Su función es permitir el volcado de información directamente desde el servidor hacia la aplicación, por defecto se configuran qué propiedades se quieren recibir desde la table de usuarios mediante el archivo conf.json. Si se deseara ampliar esta funcionalidad se debería recurrir a la codificación de un método personalizado, bien en el comunicador o bien en el servidor. |
+| $\_SESSION['identificador']['nroSesion']               | Es un entero utilizado entre servidor e identificador para asegurar que la información brindada al usuario está actualizada.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| $\_COOKIE['identificador']                             | Es un objeto utilizado para recordar la sesión del usuario. Contiene user y claveAleatoria.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| $\_SESSION['identificador']['rangoActual']             | Informa al identificador cuál es la categoría actual del usuario. (Número de categoría a partir del cual se realizan las restricciones).                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| $\_POST['User'], $\_POST['Pass'] y $\_POST['Recordar'] | Son los campos que admite el identificador y a partir de los cuales realizará las comprobaciones correspondientes. Sólo se comprobarán si existe la propiedad del router 'seccion'='login'                                                                                                                                                                                                                                                                                                                                                                                         |
+|                                                        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+
+#### Procedimientos del identificador
+
+El identificador actuará en todo momento como un filtro, al iniciar toda petición al servidor se ejecutará el mismo y deberá decidir qué información volcar al exterior dependiendo de sus factores internos. El proceso mediante el cual se decide si la información será mostrada o no (se debe redireccionar) se corresponde con el siguiente diagrama:
+
+![Diagrama identificador](documentacion/diag-redireccionamiento.png)
+
+El proceso mediante el cual el identificador establece el objeto de redireccionamiento y lo administra para llevar al usuario al destino que desea se corresponde con el siguiente diagrama:
+
+![Diagrama identificador](documentacion/diag-redireccionamiento-2.png)
+
+#### Guardado de las credenciales
+
+Para guardar las credenciales, se recurrirá a la utilización de coookies. Debido al problema de que las cookies no deberían contener núnca una contraseña guardada, se aplicará la solución de la generación de claves aleatorias.
+
+Esto es, cuando un usuario solicite guardar las credenciales en el equipo, el servidor generará una clave aleatoria y la asignará al usuario. Esta clave será guardada en las cookies y cuando el usuario vuelva a abrir el navegador, el servidor corroborará que exista una entrada para el usuario especificado con la clave aleatoria especificada. Es una forma de contraseña generada aleatoriamente y en particular para un ordenador. No siendo infalible ya que podría igualmente ser robada lo único que garantizaría al ladrón es la posibilidad de iniciar sesión **mientras esta clave permaneciera activa**, pero **núnca quedaría expuesta la contraseña del usuario**. De hecho, si en algún momento se detecta la intromisión, basta con eliminar todas las claves aleatorias para el usuario especificado y listo, el ladrón ya no podría iniciar más sesión en su nombre.
+
+El problema que genera esto es que el servidor debe ser capaz de manejar esta estructura, para lo cual deberá contar en el caso de la utilizacion de una base de datos, de una tabla adicional con columnas usuario y clave, que permita la utilización de múltiples claves para cada usuario.
+
+El módulo login sin embargo si que soporta este mecanismo y de hecho lo require para poder ser utilizado. Por defecto viene con el módulo Comunicador configurado para trabajar sobre una base de datos MySql. Para poder utilizar esta configuración por defecto, verifique la configuración del Comunicador. En caso de decidirse por esta forma, el usuario no tendrá la necesidad de intervenir en absoluto en el proceso de logueado.
+
+#### El número de sesión
+
+El número de sesión es un mecanismo utilizado para mantener los datos de usuario actualizados. Si se utiliza el sistema de identificador del framework, debería existir una columna en la tabla usuarios llamada nroSesion de tipo INT. 
+
+Su funcionamiento es muy sencillo pero no por eso menos efectivo: cuando un usuario inicia sesión se le entrega un número de sesión al identificador. Éste mantendrá la información en una variable de sesión y consultará con la base de datos el número de sesión cada vez que el usuario haga una petición al servidor. Si el número de sesión es el mismo que él tiene guardado, entonces no hace nada. En cambio, si el número de sesión fue modificado, consulta la información nueva y la actualiza en el array de datos disponible para la aplicación.
+
+De esta forma, si cada vez que se actualizara la configuración del usuario (ya sea porque se cambió el nick, la foto de perfil, el correo electrónico o lo que fuere) se actualizara en conjunto el número de sesión, adicionando una unidad al mismo. El identificador tendría una buena fuente para saber si los datos que mantiene en sesión están actualizados, evitando consultar repetitivamente los mismos datos una y otra vez.
 
 ### Intérpretes avanzados
 

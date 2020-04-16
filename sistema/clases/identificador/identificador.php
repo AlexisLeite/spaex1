@@ -23,6 +23,7 @@ class Identificador
 	public static function run()
 	{
 		Self::$ficheroRequisitos = conf('ruta/conf') . '/requisitos.json';
+		Self::$rangoPredeterminado = conf('rangoPredeterminado');
 
 		Basic::sesion();
 
@@ -49,9 +50,7 @@ class Identificador
 			}
 		}
 		
-
 		if(Router::get('seccion') == 'login' 
-			&& isset($_POST['IniciarSesion']) 
 			&& isset($_POST['User']) 
 			&& isset($_POST['Pass']))
 		{

@@ -114,6 +114,7 @@ $(document).ready(()=>
 			$('#Loader').removeClass('Abierto');
 			activarDebugs();
 			procesarSpa();
+			$('#ErrorDemoraMucho').hide();
 			cargando = false;
 		}
 

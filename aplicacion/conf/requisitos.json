@@ -1,6 +1,13 @@
 [
 	{
-		"claves":[],
-		"restriccion":5
+		"claves":{},
+		"restriccion":100
+	},
+	{
+		"claves":
+		{
+			"gestorFramework": "gestor"
+		},
+		"restriccion":1
 	}
 ]
